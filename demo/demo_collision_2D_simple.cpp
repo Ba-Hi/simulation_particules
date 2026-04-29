@@ -10,7 +10,7 @@ int main() {
     const double epsilon = 5.0;
     const double r_cut   = 2.5 * sigma;
     const double dt      = 0.00005;
-    const double tEnd    = 3.5;   // ⬅️ shorter simulation
+    const double tEnd    = 3.5;
     const double m       = 1.0;
 
     const double d = std::pow(2.0, 1.0/6.0) * sigma;
@@ -36,7 +36,7 @@ int main() {
         }
     }
 
-    // 🔻 SMALL SQUARE: 10×10
+    // SMALL SQUARE: 10×10
     int sq_size = 10;
 
     double rect_top = rect_y0 + (rect_h - 1) * d;

@@ -1,10 +1,18 @@
 add_executable(demo_systeme_solaire  demo_systeme_solaire.cpp)
-add_executable(demo_collision        demo_collision.cpp)
-add_executable(demo_collision_simple demo_collision_simple.cpp)
-add_executable(demo_collision_8000 demo_collision_8000.cpp)
+
+
+# Collision 1D
 add_executable(demo_collision_1D demo_collision_1D.cpp)
 
 
-foreach(d demo_systeme_solaire demo_collision demo_collision_simple demo_collision_8000 demo_collision_1D)
+# Collision 2D
+add_executable(demo_collision_2D demo_collision_2D.cpp)
+add_executable(demo_collision_2D_simple demo_collision_2D_simple.cpp)
+add_executable(demo_collision_3_particules demo_collision_3_particules.cpp)
+
+add_executable(demo_collision_3D demo_collision_3D.cpp)
+
+
+foreach(d demo_systeme_solaire demo_collision_1D demo_collision_2D demo_collision_2D_simple demo_collision_3_particules demo_collision_3D)
     target_link_libraries(${d} particules)
 endforeach()

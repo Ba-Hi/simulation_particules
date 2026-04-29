@@ -109,6 +109,4 @@ void Univers::avancerParticules(double tEnd, double dt) {
     }
 
     finaliseSauvegardeVTK(vtk_steps, vtk_times); 
-
-    std::cout << "Simulation terminée\n";
 }

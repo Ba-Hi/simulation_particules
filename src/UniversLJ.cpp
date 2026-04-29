@@ -17,6 +17,7 @@ UniversLJ::UniversLJ(const int& dimension, const Vector& l_d, const double& r_cu
             nz(dimension == 3 ? (int)(l_d.z() / r_cut) : 1),
             conditionX(Univers::ConditionLimite::ABSORPTION),
             conditionY(Univers::ConditionLimite::ABSORPTION),
+            conditionZ(Univers::ConditionLimite::ABSORPTION),
             celluleList(){
     if (dimension > 3 || dimension < 1) {
         throw std::invalid_argument("La dimension est soit 1D, 2D, ou 3D.");
@@ -37,6 +38,7 @@ UniversLJ::UniversLJ(const int& dimension, const Vector& l_d, const double& r_cu
             nz(dimension == 3 ? (int)(l_d.z() / r_cut) : 1),
             conditionX(Univers::ConditionLimite::ABSORPTION),
             conditionY(Univers::ConditionLimite::ABSORPTION),
+            conditionZ(Univers::ConditionLimite::ABSORPTION),
             celluleList(){
     if (dimension > 3 || dimension < 1) {
         throw std::invalid_argument("La dimension est soit 1D, 2D, ou 3D.");
@@ -206,13 +208,23 @@ std::vector<Vector> UniversLJ::calculerForces() {
 }
 
 
+void UniversLJ::setConditionsLimites(Univers::ConditionLimite cx) {
+    conditionX = cx;
+}
+
 void UniversLJ::setConditionsLimites(Univers::ConditionLimite cx, Univers::ConditionLimite cy) {
     conditionX = cx;
     conditionY = cy;
 }
 
+void UniversLJ::setConditionsLimites(Univers::ConditionLimite cx, Univers::ConditionLimite cy, Univers::ConditionLimite cz) {
+    conditionX = cx;
+    conditionY = cy;
+    conditionZ = cz;
+}
+
 void UniversLJ::mettreAJourCellules() {
-    appliquerConditionsLimites(conditionX, conditionY);
+    appliquerConditionsLimites(conditionX, conditionY, conditionZ);
 
     for (Cellule& c : celluleList)
         c.viderParticules();
@@ -231,7 +243,7 @@ void UniversLJ::mettreAJourCellules() {
     }
 }
 
-void UniversLJ::appliquerConditionsLimites(Univers::ConditionLimite cx, Univers::ConditionLimite cy) {
+void UniversLJ::appliquerConditionsLimites(Univers::ConditionLimite cx, Univers::ConditionLimite cy, Univers::ConditionLimite cz) {
     auto appliquerAxe = [&](double &coord, double limit, Univers::ConditionLimite condition, double &velocity) {
         bool absorb = false;
 
@@ -280,7 +292,7 @@ void UniversLJ::appliquerConditionsLimites(Univers::ConditionLimite cx, Univers:
             absorb = absorb || appliquerAxe(y, l_d.y(), cy, vy);
 
         if (dimension == 3)
-            absorb = absorb || appliquerAxe(z, l_d.z(), cy, vz);
+            absorb = absorb || appliquerAxe(z, l_d.z(), cz, vz);
 
 
         if (!absorb) {
@@ -290,7 +302,9 @@ void UniversLJ::appliquerConditionsLimites(Univers::ConditionLimite cx, Univers:
         }
     }
 
-    if (cx == Univers::ConditionLimite::ABSORPTION || cy == Univers::ConditionLimite::ABSORPTION) {
+    if (cx == Univers::ConditionLimite::ABSORPTION ||
+        cy == Univers::ConditionLimite::ABSORPTION ||
+        cz == Univers::ConditionLimite::ABSORPTION) {
         particuleList = survivantes;
         n_particules = particuleList.size();
     }

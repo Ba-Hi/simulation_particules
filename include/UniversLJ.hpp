@@ -22,6 +22,7 @@ private:
     int nx, ny, nz;
     Univers::ConditionLimite conditionX;
     Univers::ConditionLimite conditionY;
+    Univers::ConditionLimite conditionZ;
     std::vector<Cellule> celluleList;
 
 public:
@@ -49,9 +50,22 @@ public:
     void initialiserCellules();
 
     /**
-     * @brief Définit les conditions aux limites en x et en y
+     * @brief Définit la condition aux limites en x (pour dim 1)
      */
-    void setConditionsLimites(Univers::ConditionLimite cx, Univers::ConditionLimite cy);
+    void setConditionsLimites(Univers::ConditionLimite cx);
+
+    /**
+     * @brief Définit les conditions aux limites en x et y (pour dim 2)
+     */
+    void setConditionsLimites(Univers::ConditionLimite cx,
+                              Univers::ConditionLimite cy);
+
+    /**
+     * @brief Définit les conditions aux limites en x, y et z (pour dim 3)
+     */
+    void setConditionsLimites(Univers::ConditionLimite cx,
+                              Univers::ConditionLimite cy,
+                              Univers::ConditionLimite cz);
 
     /**
      * @brief Calcule les forces de Lennard-Jones en utilisant les cellules liées
@@ -84,7 +98,9 @@ private:
     /**
      * @brief Applique les conditions aux limites actives aux particules
      */
-    void appliquerConditionsLimites(Univers::ConditionLimite cx, Univers::ConditionLimite cy);
+    void appliquerConditionsLimites(Univers::ConditionLimite cx,
+                                    Univers::ConditionLimite cy,
+                                    Univers::ConditionLimite cz);
 
     /**
      * @brief Convertit les indices 3D en indice 1D pour l'accès au tableau

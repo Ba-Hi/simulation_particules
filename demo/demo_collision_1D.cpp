@@ -21,8 +21,7 @@ int main() {
 
     // UniversLJ::UniversLJ(dimension, l_d, r_cut, epsilon, sigma)
     UniversLJ u(1, Vector(Lx), r_cut, epsilon, sigma);
-    u.setConditionsLimites(Univers::ConditionLimite::ABSORPTION,
-                           Univers::ConditionLimite::ABSORPTION);
+    u.setConditionsLimites(Univers::ConditionLimite::ABSORPTION);
 
 
     const int    n_A     = 10; // nombre de particules dans le groupe A

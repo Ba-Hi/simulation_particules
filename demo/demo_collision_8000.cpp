@@ -10,7 +10,7 @@ int main() {
     const double epsilon = 5.0;
     const double r_cut   = 2.5 * sigma;
     const double dt      = 0.00005;
-    const double tEnd    = 14.5;
+    const double tEnd    = 19.5;
     const double m       = 1.0;
 
     // Distance inter-particules

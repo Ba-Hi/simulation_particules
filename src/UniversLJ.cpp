@@ -12,8 +12,8 @@ UniversLJ::UniversLJ(const int& dimension, const Vector& l_d, const double& r_cu
             r_cut(r_cut),
             epsilon(1.0),
             sigma(1.0),
-            nx((int)(l_d.x() / r_cut)),
-            ny((int)(l_d.y() / r_cut)),
+            nx(dimension >= 1 ? (int)(l_d.x() / r_cut) : 1),
+            ny(dimension >= 2 ? (int)(l_d.y() / r_cut) : 1),
             nz(dimension == 3 ? (int)(l_d.z() / r_cut) : 1),
             conditionX(Univers::ConditionLimite::ABSORPTION),
             conditionY(Univers::ConditionLimite::ABSORPTION),
@@ -30,8 +30,10 @@ UniversLJ::UniversLJ(const int& dimension, const Vector& l_d, const double& r_cu
             r_cut(r_cut),
             epsilon(epsilon),
             sigma(sigma),
-            nx((int)(l_d.x() / r_cut)),
-            ny((int)(l_d.y() / r_cut)),
+            nx(dimension >= 1 ? (int)(l_d.x() / r_cut) : 1),
+            ny(dimension >= 2 ? (int)(l_d.y() / r_cut) : 1),
+            // nx((int)(l_d.x() / r_cut)),
+            // ny((int)(l_d.y() / r_cut)),
             nz(dimension == 3 ? (int)(l_d.z() / r_cut) : 1),
             conditionX(Univers::ConditionLimite::ABSORPTION),
             conditionY(Univers::ConditionLimite::ABSORPTION),
@@ -203,96 +205,6 @@ std::vector<Vector> UniversLJ::calculerForces() {
     return forces;
 }
 
-// std::vector<Vector> UniversLJ::calculerForces() {
-//     calculerForces(epsilon, sigma);
-//     std::vector<Vector> forces;
-//     forces.reserve(particuleList.size());
-//     for (const auto& p : particuleList) {
-//         forces.push_back(p.getForce());
-//     }
-//     return forces;
-// }
-
-// void UniversLJ::calculerForces(double epsilon, double sigma) {
-//     const double r_cut2 = r_cut * r_cut;
-//     const double sigma2 = sigma * sigma;
-//     const double sigma6 = sigma2 * sigma2 * sigma2;
-//     const double min_r2   = 0.05 * sigma2; // évite la singularité pour des contacts très proches
-
-//     for (Particule& p : particuleList)
-//         p.setForce(Vector(0.0, 0.0, 0.0));
-
-//     for (int i = 0; i < nx; i++)
-//     for (int j = 0; j < ny; j++)
-//     for (int k = 0; k < nz; k++) {
-
-//         Cellule& ci = celluleList[indice1D(i, j, k)];
-
-//         // Interactions intra-cellule
-//         const auto& parts = ci.getParticuleList();
-//         for (size_t a = 0; a < parts.size(); ++a) {
-//             for (size_t b = a + 1; b < parts.size(); ++b) {
-//                 Particule& pi = *parts[a];
-//                 Particule& pj = *parts[b];
-
-//                 Vector rij  = pi.getPosition() - pj.getPosition();
-
-//                 double dx = pj.getPosition().x() - pi.getPosition().x();
-//                 double dy = pj.getPosition().y() - pi.getPosition().y();
-//                 double dz = pj.getPosition().z() - pi.getPosition().z();
-
-//                 double dist2 = dx*dx + dy*dy + dz*dz + 1e-12;
-
-//                 if (dist2 == 0.0 || dist2 > r_cut2) continue;
-
-
-//                 double invDist2 = 1.0 / dist2;
-//                 double s_r6 = sigma6 * invDist2 * invDist2 * invDist2;
-//                 double coeff = (24.0 * epsilon * invDist2) * s_r6 * (1.0 - 2.0 * s_r6);
-//                 Vector fij   = rij * coeff;
-
-//                 pi.setForce(pi.getForce() + fij);
-//                 pj.setForce(pj.getForce() - fij);
-
-//             }
-//         }
-
-
-//         // Interactions avec les cellules voisines
-//         for (Cellule* cj : ci.getVoisines()) {
-//             if (cj == &ci) continue;
-//             if (cj < &ci) continue; // évite double comptage
-
-//             for (Particule* pi_ptr : ci.getParticuleList()) {
-//                 Particule& pi = *pi_ptr;
-
-//                 // Distance entre la particule pi et le centre de la cellule voisine cj
-//                 // double d = (pi.getPosition() - cj->centreCellule()).norm();
-                
-//                 // if (d > r_cut * (1.0 + std::sqrt(2.0) / 2.0)) continue;
-
-//                 for (Particule* pj_ptr : cj->getParticuleList()) {
-//                     Particule& pj = *pj_ptr;
-//                     if (&pi == &pj) continue;
-
-//                     Vector rij = pi.getPosition() - pj.getPosition();
-//                     double dist2 = rij.norm2();
-//                     if (dist2 == 0.0 || dist2 > r_cut2) continue;
-//                     if (dist2 < min_r2) dist2 = min_r2;
-
-//                     double invDist2 = 1.0 / dist2;
-//                     double s_r6  = sigma6 * invDist2 * invDist2 * invDist2;
-//                     double coeff = (24.0 * epsilon * invDist2) * s_r6 * (1.0 - 2.0 * s_r6);
-//                     Vector fij   = rij * (-coeff);
-
-//                     pi.setForce(pi.getForce() + fij);
-//                     pj.setForce(pj.getForce() - fij);
-//                 }
-//             }
-//         }
-//     }
-// }
-
 
 void UniversLJ::setConditionsLimites(Univers::ConditionLimite cx, Univers::ConditionLimite cy) {
     conditionX = cx;
@@ -362,10 +274,14 @@ void UniversLJ::appliquerConditionsLimites(Univers::ConditionLimite cx, Univers:
         double vy = vel.y();
         double vz = vel.z();
 
-        absorb = appliquerAxe(x, l_d.x(), cx, vx) || appliquerAxe(y, l_d.y(), cy, vy);
-        if (dimension == 3) {
+        absorb = appliquerAxe(x, l_d.x(), cx, vx);
+
+        if (dimension >= 2)
+            absorb = absorb || appliquerAxe(y, l_d.y(), cy, vy);
+
+        if (dimension == 3)
             absorb = absorb || appliquerAxe(z, l_d.z(), cy, vz);
-        }
+
 
         if (!absorb) {
             p.setPosition(Vector(x, y, z));

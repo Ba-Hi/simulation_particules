@@ -17,6 +17,7 @@ int main() {
     const double d = std::pow(2.0, 1.0/6.0) * sigma;
 
     UniversLJ u(2, Vector(30.0, 30.0, 0.0), r_cut, epsilon, sigma);
+    u.initialiserCellules();
 
     // Groupe A : 3 particules fixes
     for (int i = 0; i < 3; i++) {

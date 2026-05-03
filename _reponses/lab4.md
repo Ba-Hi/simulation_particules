@@ -113,3 +113,40 @@ const auto& voisins = cj->getParticuleList(); // une seule fois
 6. Les options de compilations (voir lab3)
 
 En prenant en compte les conditions aux limites et les optimisations de performances, l'execution du code `./demo/demo_collision_2D` passe de 26min à 4m17s !
+
+- Remarques sur les performances
+
+L’analyse avec perf montre que la fonction calculerForces() concentre environ 66% du temps d’exécution, ce qui en fait le principal goulot d’étranglement.
+
+Le programme est globalement bien optimisé côté calcul (IPC ~1.8–2.0), mais reste limité par :
+- des accès mémoire coûteux (cache misses),
+- des branches mal prédites (~6-7% de branch misses),
+- et des indirections via pointeurs et objets Vector.
+
+On observe aussi que le CPU passe une partie du temps à attendre les données mémoire (backend bound).
+
+Resultat de perf stat :
+
+```
+ 1,237,291,373,275      cpu_atom/instructions/           #    1.47  insn per cycle              (0.15%)
+ 2,112,222,143,109      cpu_core/instructions/           #    1.88  insn per cycle              (99.83%)
+   842,119,295,192      cpu_atom/cycles/                 #    3.549 GHz                         (0.15%)
+ 1,120,706,637,781      cpu_core/cycles/                 #    4.723 GHz                         (99.83%)
+   126,072,813,943      cpu_atom/branches/               #  531.361 M/sec                       (0.15%)
+   221,992,588,105      cpu_core/branches/               #  935.635 M/sec                       (99.83%)
+     7,955,687,725      cpu_atom/branch-misses/          #    6.31% of all branches             (0.15%)
+    14,962,123,978      cpu_core/branch-misses/          #    6.74% of all branches             (99.83%)
+ #     29.6 %  tma_backend_bound      
+                                                  #     20.2 %  tma_bad_speculation    
+                                                  #      4.1 %  tma_frontend_bound     
+                                                  #     46.2 %  tma_retiring             (99.83%)
+ #     37.2 %  tma_bad_speculation    
+                                                  #     29.7 %  tma_retiring             (0.15%)
+ #     21.8 %  tma_backend_bound      
+                                                  #     11.3 %  tma_frontend_bound       (0.15%)
+
+     237.350997730 seconds time elapsed
+
+     237.163028000 seconds user
+       0.102986000 seconds sys
+```

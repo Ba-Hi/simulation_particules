@@ -8,7 +8,7 @@ double Cellule::getTailleCellule() const {
     return tailleCellule;
 }
 
-std::vector<Particule*>& Cellule::getParticuleList() {
+const std::vector<Particule*>& Cellule::getParticuleList() const {
     return particuleList;
 }
 

@@ -45,8 +45,8 @@ double insertion_avec_reserve(int n) {
 }
 
 int main() {
-    std::vector<int> tailles = {64, 128, 256, 512, 1024, 2048, 4096};
-
+    std::vector<int> tailles = {64, 128, 256, 512, 1024, 2048, 4096, 32768};
+// derniere taille = pow(2, 15) = 32768 pour le tp3
     for (int n : tailles) {
         double sans  = insertion_sans_reserve(n);
         double avec  = insertion_avec_reserve(n);

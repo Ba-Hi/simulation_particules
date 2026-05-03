@@ -1,0 +1,414 @@
+Flat profile:
+
+Each sample counts as 0.01 seconds.
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls   s/call   s/call  name    
+ 57.42      3.25     3.25    60002     0.00     0.00  UniversLJ::calculerForces()
+ 18.37      4.29     1.04                             _init
+  9.72      4.84     0.55 2531364376     0.00     0.00  Cellule::getParticuleList() const
+  3.53      5.04     0.20 762126571     0.00     0.00  Particule::getPosition() const
+  2.30      5.17     0.13 287662104     0.00     0.00  Vector::Vector(double, double, double)
+  2.12      5.29     0.12 167537101     0.00     0.00  Vector::operator+=(Vector const&)
+  1.59      5.38     0.09 167537101     0.00     0.00  Vector::operator-=(Vector const&)
+  1.33      5.46     0.07 60001000     0.00     0.00  Vector::operator+(Vector const&) const
+  0.71      5.50     0.04 207366912     0.00     0.00  Cellule::getVoisines()
+  0.62      5.53     0.04 207366912     0.00     0.00  Cellule::viderParticules()
+  0.53      5.56     0.03    60002     0.00     0.00  UniversLJ::mettreAJourCellules()
+  0.44      5.58     0.03    62250     0.00     0.00  Vector::norm() const
+  0.44      5.61     0.03                             Cellule::centreCellule() const
+  0.35      5.63     0.02 45001000     0.00     0.00  Vector::operator=(Vector const&)
+  0.18      5.64     0.01 15000500     0.00     0.00  Cellule::ajouterParticule(Particule*)
+  0.09      5.64     0.01 60001000     0.00     0.00  Vector::operator*(double) const
+  0.09      5.65     0.01 15000500     0.00     0.00  Particule::setForce(Vector const&)
+  0.09      5.66     0.01    62250     0.00     0.00  Vector::operator-(Vector const&) const
+  0.09      5.66     0.01                             Particule::getForce() const
+  0.00      5.66     0.00 30151000     0.00     0.00  Particule::getVitesse() const
+  0.00      5.66     0.00 15000250     0.00     0.00  Particule::setVitesse(Vector const&)
+  0.00      5.66     0.00 15000250     0.00     0.00  Particule::setPosition(Vector const&)
+  0.00      5.66     0.00    80920     0.00     0.00  Cellule::ajouterVoisine(Cellule*)
+  0.00      5.66     0.00    62750     0.00     0.00  Vector::norm2() const
+  0.00      5.66     0.00    60001     0.00     0.00  Univers::sauvegardeVTK(int, double, int, std::vector<int, std::allocator<int> >&, std::vector<double, std::allocator<double> >&)
+  0.00      5.66     0.00    50750     0.00     0.00  Particule::getMasse() const
+  0.00      5.66     0.00    50000     0.00     0.00  Particule::getType() const
+  0.00      5.66     0.00    20552     0.00     0.00  void std::vector<Cellule*, std::allocator<Cellule*> >::_M_realloc_append<Cellule* const&>(Cellule* const&)
+  0.00      5.66     0.00     3456     0.00     0.00  Cellule::Cellule(double, int, int, int)
+  0.00      5.66     0.00      463     0.00     0.00  void std::vector<Particule*, std::allocator<Particule*> >::_M_realloc_append<Particule* const&>(Particule* const&)
+  0.00      5.66     0.00      250     0.00     0.00  Univers::ajouterParticule(Particule const&)
+  0.00      5.66     0.00      250     0.00     0.00  Particule::Particule(Vector const&, Vector const&, double, int, int, Vector const&)
+  0.00      5.66     0.00      200     0.00     0.00  saveVTK(std::vector<Particule, std::allocator<Particule> > const&, int, double)
+  0.00      5.66     0.00        9     0.00     0.00  void std::vector<Particule, std::allocator<Particule> >::_M_realloc_append<Particule const&>(Particule const&)
+  0.00      5.66     0.00        9     0.00     0.00  void std::vector<double, std::allocator<double> >::_M_realloc_append<double const&>(double const&)
+  0.00      5.66     0.00        9     0.00     0.00  void std::vector<int, std::allocator<int> >::_M_realloc_append<int const&>(int const&)
+  0.00      5.66     0.00        2     0.00     0.00  UniversLJ::energieCinetique() const
+  0.00      5.66     0.00        2     0.00     0.02  UniversLJ::energiePotentielle() const
+  0.00      5.66     0.00        1     0.00     0.00  savePVD(std::vector<int, std::allocator<int> > const&, std::vector<double, std::allocator<double> > const&)
+  0.00      5.66     0.00        1     0.00     4.56  Univers::avancerParticules(double, double)
+  0.00      5.66     0.00        1     0.00     0.00  Univers::Univers(int, int)
+  0.00      5.66     0.00        1     0.00     0.00  UniversLJ::initialiserCellules()
+  0.00      5.66     0.00        1     0.00     0.00  UniversLJ::setConditionsLimites(Univers::ConditionLimite, Univers::ConditionLimite)
+  0.00      5.66     0.00        1     0.00     0.00  UniversLJ::UniversLJ(int const&, Vector const&, double const&, double, double)
+  0.00      5.66     0.00        1     0.00     0.00  UniversLJ::~UniversLJ()
+  0.00      5.66     0.00        1     0.00     0.00  std::vector<Cellule, std::allocator<Cellule> >::reserve(unsigned long)
+
+ %         the percentage of the total running time of the
+time       program used by this function.
+
+cumulative a running sum of the number of seconds accounted
+ seconds   for by this function and those listed above it.
+
+ self      the number of seconds accounted for by this
+seconds    function alone.  This is the major sort for this
+           listing.
+
+calls      the number of times this function was invoked, if
+           this function is profiled, else blank.
+
+ self      the average number of milliseconds spent in this
+ms/call    function per call, if this function is profiled,
+	   else blank.
+
+ total     the average number of milliseconds spent in this
+ms/call    function and its descendents per call, if this
+	   function is profiled, else blank.
+
+name       the name of the function.  This is the minor sort
+           for this listing. The index shows the location of
+	   the function in the gprof listing. If the index is
+	   in parenthesis it shows where it would appear in
+	   the gprof listing if it were to be printed.
+
+Copyright (C) 2012-2025 Free Software Foundation, Inc.
+
+Copying and distribution of this file, with or without modification,
+are permitted in any medium without royalty provided the copyright
+notice and this notice are preserved.
+
+		     Call graph (explanation follows)
+
+
+granularity: each sample hit covers 4 byte(s) for 0.18% of 5.66 seconds
+
+index % time    self  children    called     name
+                                                 <spontaneous>
+[1]     81.1    0.00    4.59                 main [1]
+                0.00    4.56       1/1           Univers::avancerParticules(double, double) [2]
+                0.00    0.03       2/2           UniversLJ::energiePotentielle() const [15]
+                0.00    0.00       1/1           UniversLJ::initialiserCellules() [27]
+                0.00    0.00     751/287662104     Vector::Vector(double, double, double) [7]
+                0.00    0.00     250/250         Particule::Particule(Vector const&, Vector const&, double, int, int, Vector const&) [43]
+                0.00    0.00     250/250         Univers::ajouterParticule(Particule const&) [42]
+                0.00    0.00       2/2           UniversLJ::energieCinetique() const [47]
+                0.00    0.00       1/1           UniversLJ::UniversLJ(int const&, Vector const&, double const&, double, double) [51]
+                0.00    0.00       1/1           UniversLJ::setConditionsLimites(Univers::ConditionLimite, Univers::ConditionLimite) [50]
+                0.00    0.00       1/1           UniversLJ::~UniversLJ() [52]
+-----------------------------------------------
+                0.00    4.56       1/1           main [1]
+[2]     80.6    0.00    4.56       1         Univers::avancerParticules(double, double) [2]
+                3.25    1.08   60002/60002       UniversLJ::calculerForces() [3]
+                0.07    0.03 60001000/60001000     Vector::operator+(Vector const&) const [9]
+                0.03    0.05   60001/60002       UniversLJ::mettreAJourCellules() [11]
+                0.01    0.03 60001000/60001000     Vector::operator*(double) const [14]
+                0.00    0.01 15000250/15000250     Particule::setPosition(Vector const&) [22]
+                0.00    0.01 15000250/15000250     Particule::setVitesse(Vector const&) [21]
+                0.00    0.00 15000250/762126571     Particule::getPosition() const [6]
+                0.00    0.00   60001/60001       Univers::sauvegardeVTK(int, double, int, std::vector<int, std::allocator<int> >&, std::vector<double, std::allocator<double> >&) [25]
+                0.00    0.00 30000500/30151000     Particule::getVitesse() const [34]
+                0.00    0.00     250/50750       Particule::getMasse() const [37]
+                0.00    0.00       1/1           savePVD(std::vector<int, std::allocator<int> > const&, std::vector<double, std::allocator<double> > const&) [48]
+-----------------------------------------------
+                3.25    1.08   60002/60002       Univers::avancerParticules(double, double) [2]
+[3]     76.5    3.25    1.08   60002         UniversLJ::calculerForces() [3]
+                0.55    0.00 2531364376/2531364376     Cellule::getParticuleList() const [5]
+                0.19    0.00 731851321/762126571     Particule::getPosition() const [6]
+                0.12    0.00 167537101/167537101     Vector::operator+=(Vector const&) [8]
+                0.09    0.00 167537101/167537101     Vector::operator-=(Vector const&) [10]
+                0.08    0.00 167597103/287662104     Vector::Vector(double, double, double) [7]
+                0.04    0.00 207366912/207366912     Cellule::getVoisines() [12]
+                0.01    0.01 15000500/15000500     Particule::setForce(Vector const&) [19]
+-----------------------------------------------
+                                                 <spontaneous>
+[4]     18.4    1.04    0.00                 _init [4]
+-----------------------------------------------
+                0.55    0.00 2531364376/2531364376     UniversLJ::calculerForces() [3]
+[5]      9.7    0.55    0.00 2531364376         Cellule::getParticuleList() const [5]
+-----------------------------------------------
+                0.00    0.00  124500/762126571     UniversLJ::energiePotentielle() const [15]
+                0.00    0.00  150000/762126571     saveVTK(std::vector<Particule, std::allocator<Particule> > const&, int, double) [26]
+                0.00    0.00 15000250/762126571     Univers::avancerParticules(double, double) [2]
+                0.00    0.00 15000500/762126571     UniversLJ::mettreAJourCellules() [11]
+                0.19    0.00 731851321/762126571     UniversLJ::calculerForces() [3]
+[6]      3.5    0.20    0.00 762126571         Particule::getPosition() const [6]
+-----------------------------------------------
+                0.00    0.00     751/287662104     main [1]
+                0.00    0.00   62250/287662104     Vector::operator-(Vector const&) const [23]
+                0.03    0.00 60001000/287662104     Vector::operator+(Vector const&) const [9]
+                0.03    0.00 60001000/287662104     Vector::operator*(double) const [14]
+                0.08    0.00 167597103/287662104     UniversLJ::calculerForces() [3]
+[7]      2.3    0.13    0.00 287662104         Vector::Vector(double, double, double) [7]
+-----------------------------------------------
+                0.12    0.00 167537101/167537101     UniversLJ::calculerForces() [3]
+[8]      2.1    0.12    0.00 167537101         Vector::operator+=(Vector const&) [8]
+-----------------------------------------------
+                0.07    0.03 60001000/60001000     Univers::avancerParticules(double, double) [2]
+[9]      1.8    0.07    0.03 60001000         Vector::operator+(Vector const&) const [9]
+                0.03    0.00 60001000/287662104     Vector::Vector(double, double, double) [7]
+-----------------------------------------------
+                0.09    0.00 167537101/167537101     UniversLJ::calculerForces() [3]
+[10]     1.6    0.09    0.00 167537101         Vector::operator-=(Vector const&) [10]
+-----------------------------------------------
+                0.00    0.00       1/60002       UniversLJ::initialiserCellules() [27]
+                0.03    0.05   60001/60002       Univers::avancerParticules(double, double) [2]
+[11]     1.4    0.03    0.05   60002         UniversLJ::mettreAJourCellules() [11]
+                0.04    0.00 207366912/207366912     Cellule::viderParticules() [13]
+                0.01    0.00 15000500/15000500     Cellule::ajouterParticule(Particule*) [20]
+                0.00    0.00 15000500/762126571     Particule::getPosition() const [6]
+-----------------------------------------------
+                0.04    0.00 207366912/207366912     UniversLJ::calculerForces() [3]
+[12]     0.7    0.04    0.00 207366912         Cellule::getVoisines() [12]
+-----------------------------------------------
+                0.04    0.00 207366912/207366912     UniversLJ::mettreAJourCellules() [11]
+[13]     0.6    0.04    0.00 207366912         Cellule::viderParticules() [13]
+-----------------------------------------------
+                0.01    0.03 60001000/60001000     Univers::avancerParticules(double, double) [2]
+[14]     0.6    0.01    0.03 60001000         Vector::operator*(double) const [14]
+                0.03    0.00 60001000/287662104     Vector::Vector(double, double, double) [7]
+-----------------------------------------------
+                0.00    0.03       2/2           main [1]
+[15]     0.5    0.00    0.03       2         UniversLJ::energiePotentielle() const [15]
+                0.03    0.00   62250/62250       Vector::norm() const [16]
+                0.01    0.00   62250/62250       Vector::operator-(Vector const&) const [23]
+                0.00    0.00  124500/762126571     Particule::getPosition() const [6]
+-----------------------------------------------
+                0.03    0.00   62250/62250       UniversLJ::energiePotentielle() const [15]
+[16]     0.4    0.03    0.00   62250         Vector::norm() const [16]
+                0.00    0.00   62250/62750       Vector::norm2() const [36]
+-----------------------------------------------
+                                                 <spontaneous>
+[17]     0.4    0.03    0.00                 Cellule::centreCellule() const [17]
+-----------------------------------------------
+                0.01    0.00 15000250/45001000     Particule::setPosition(Vector const&) [22]
+                0.01    0.00 15000250/45001000     Particule::setVitesse(Vector const&) [21]
+                0.01    0.00 15000500/45001000     Particule::setForce(Vector const&) [19]
+[18]     0.4    0.02    0.00 45001000         Vector::operator=(Vector const&) [18]
+-----------------------------------------------
+                0.01    0.01 15000500/15000500     UniversLJ::calculerForces() [3]
+[19]     0.2    0.01    0.01 15000500         Particule::setForce(Vector const&) [19]
+                0.01    0.00 15000500/45001000     Vector::operator=(Vector const&) [18]
+-----------------------------------------------
+                0.01    0.00 15000500/15000500     UniversLJ::mettreAJourCellules() [11]
+[20]     0.2    0.01    0.00 15000500         Cellule::ajouterParticule(Particule*) [20]
+                0.00    0.00     463/463         void std::vector<Particule*, std::allocator<Particule*> >::_M_realloc_append<Particule* const&>(Particule* const&) [41]
+-----------------------------------------------
+                0.00    0.01 15000250/15000250     Univers::avancerParticules(double, double) [2]
+[21]     0.1    0.00    0.01 15000250         Particule::setVitesse(Vector const&) [21]
+                0.01    0.00 15000250/45001000     Vector::operator=(Vector const&) [18]
+-----------------------------------------------
+                0.00    0.01 15000250/15000250     Univers::avancerParticules(double, double) [2]
+[22]     0.1    0.00    0.01 15000250         Particule::setPosition(Vector const&) [22]
+                0.01    0.00 15000250/45001000     Vector::operator=(Vector const&) [18]
+-----------------------------------------------
+                0.01    0.00   62250/62250       UniversLJ::energiePotentielle() const [15]
+[23]     0.1    0.01    0.00   62250         Vector::operator-(Vector const&) const [23]
+                0.00    0.00   62250/287662104     Vector::Vector(double, double, double) [7]
+-----------------------------------------------
+                                                 <spontaneous>
+[24]     0.1    0.01    0.00                 Particule::getForce() const [24]
+-----------------------------------------------
+                0.00    0.00   60001/60001       Univers::avancerParticules(double, double) [2]
+[25]     0.0    0.00    0.00   60001         Univers::sauvegardeVTK(int, double, int, std::vector<int, std::allocator<int> >&, std::vector<double, std::allocator<double> >&) [25]
+                0.00    0.00     200/200         saveVTK(std::vector<Particule, std::allocator<Particule> > const&, int, double) [26]
+                0.00    0.00       9/9           void std::vector<int, std::allocator<int> >::_M_realloc_append<int const&>(int const&) [46]
+                0.00    0.00       9/9           void std::vector<double, std::allocator<double> >::_M_realloc_append<double const&>(double const&) [45]
+-----------------------------------------------
+                0.00    0.00     200/200         Univers::sauvegardeVTK(int, double, int, std::vector<int, std::allocator<int> >&, std::vector<double, std::allocator<double> >&) [25]
+[26]     0.0    0.00    0.00     200         saveVTK(std::vector<Particule, std::allocator<Particule> > const&, int, double) [26]
+                0.00    0.00  150000/762126571     Particule::getPosition() const [6]
+                0.00    0.00  150000/30151000     Particule::getVitesse() const [34]
+                0.00    0.00   50000/50750       Particule::getMasse() const [37]
+                0.00    0.00   50000/50000       Particule::getType() const [38]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[27]     0.0    0.00    0.00       1         UniversLJ::initialiserCellules() [27]
+                0.00    0.00       1/60002       UniversLJ::mettreAJourCellules() [11]
+                0.00    0.00   80920/80920       Cellule::ajouterVoisine(Cellule*) [35]
+                0.00    0.00    3456/3456        Cellule::Cellule(double, int, int, int) [40]
+                0.00    0.00       1/1           std::vector<Cellule, std::allocator<Cellule> >::reserve(unsigned long) [53]
+-----------------------------------------------
+                0.00    0.00     500/30151000     UniversLJ::energieCinetique() const [47]
+                0.00    0.00  150000/30151000     saveVTK(std::vector<Particule, std::allocator<Particule> > const&, int, double) [26]
+                0.00    0.00 30000500/30151000     Univers::avancerParticules(double, double) [2]
+[34]     0.0    0.00    0.00 30151000         Particule::getVitesse() const [34]
+-----------------------------------------------
+                0.00    0.00   80920/80920       UniversLJ::initialiserCellules() [27]
+[35]     0.0    0.00    0.00   80920         Cellule::ajouterVoisine(Cellule*) [35]
+                0.00    0.00   20552/20552       void std::vector<Cellule*, std::allocator<Cellule*> >::_M_realloc_append<Cellule* const&>(Cellule* const&) [39]
+-----------------------------------------------
+                0.00    0.00     500/62750       UniversLJ::energieCinetique() const [47]
+                0.00    0.00   62250/62750       Vector::norm() const [16]
+[36]     0.0    0.00    0.00   62750         Vector::norm2() const [36]
+-----------------------------------------------
+                0.00    0.00     250/50750       Univers::avancerParticules(double, double) [2]
+                0.00    0.00     500/50750       UniversLJ::energieCinetique() const [47]
+                0.00    0.00   50000/50750       saveVTK(std::vector<Particule, std::allocator<Particule> > const&, int, double) [26]
+[37]     0.0    0.00    0.00   50750         Particule::getMasse() const [37]
+-----------------------------------------------
+                0.00    0.00   50000/50000       saveVTK(std::vector<Particule, std::allocator<Particule> > const&, int, double) [26]
+[38]     0.0    0.00    0.00   50000         Particule::getType() const [38]
+-----------------------------------------------
+                0.00    0.00   20552/20552       Cellule::ajouterVoisine(Cellule*) [35]
+[39]     0.0    0.00    0.00   20552         void std::vector<Cellule*, std::allocator<Cellule*> >::_M_realloc_append<Cellule* const&>(Cellule* const&) [39]
+-----------------------------------------------
+                0.00    0.00    3456/3456        UniversLJ::initialiserCellules() [27]
+[40]     0.0    0.00    0.00    3456         Cellule::Cellule(double, int, int, int) [40]
+-----------------------------------------------
+                0.00    0.00     463/463         Cellule::ajouterParticule(Particule*) [20]
+[41]     0.0    0.00    0.00     463         void std::vector<Particule*, std::allocator<Particule*> >::_M_realloc_append<Particule* const&>(Particule* const&) [41]
+-----------------------------------------------
+                0.00    0.00     250/250         main [1]
+[42]     0.0    0.00    0.00     250         Univers::ajouterParticule(Particule const&) [42]
+                0.00    0.00       9/9           void std::vector<Particule, std::allocator<Particule> >::_M_realloc_append<Particule const&>(Particule const&) [44]
+-----------------------------------------------
+                0.00    0.00     250/250         main [1]
+[43]     0.0    0.00    0.00     250         Particule::Particule(Vector const&, Vector const&, double, int, int, Vector const&) [43]
+-----------------------------------------------
+                0.00    0.00       9/9           Univers::ajouterParticule(Particule const&) [42]
+[44]     0.0    0.00    0.00       9         void std::vector<Particule, std::allocator<Particule> >::_M_realloc_append<Particule const&>(Particule const&) [44]
+-----------------------------------------------
+                0.00    0.00       9/9           Univers::sauvegardeVTK(int, double, int, std::vector<int, std::allocator<int> >&, std::vector<double, std::allocator<double> >&) [25]
+[45]     0.0    0.00    0.00       9         void std::vector<double, std::allocator<double> >::_M_realloc_append<double const&>(double const&) [45]
+-----------------------------------------------
+                0.00    0.00       9/9           Univers::sauvegardeVTK(int, double, int, std::vector<int, std::allocator<int> >&, std::vector<double, std::allocator<double> >&) [25]
+[46]     0.0    0.00    0.00       9         void std::vector<int, std::allocator<int> >::_M_realloc_append<int const&>(int const&) [46]
+-----------------------------------------------
+                0.00    0.00       2/2           main [1]
+[47]     0.0    0.00    0.00       2         UniversLJ::energieCinetique() const [47]
+                0.00    0.00     500/50750       Particule::getMasse() const [37]
+                0.00    0.00     500/62750       Vector::norm2() const [36]
+                0.00    0.00     500/30151000     Particule::getVitesse() const [34]
+-----------------------------------------------
+                0.00    0.00       1/1           Univers::avancerParticules(double, double) [2]
+[48]     0.0    0.00    0.00       1         savePVD(std::vector<int, std::allocator<int> > const&, std::vector<double, std::allocator<double> > const&) [48]
+-----------------------------------------------
+                0.00    0.00       1/1           UniversLJ::UniversLJ(int const&, Vector const&, double const&, double, double) [51]
+[49]     0.0    0.00    0.00       1         Univers::Univers(int, int) [49]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[50]     0.0    0.00    0.00       1         UniversLJ::setConditionsLimites(Univers::ConditionLimite, Univers::ConditionLimite) [50]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[51]     0.0    0.00    0.00       1         UniversLJ::UniversLJ(int const&, Vector const&, double const&, double, double) [51]
+                0.00    0.00       1/1           Univers::Univers(int, int) [49]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[52]     0.0    0.00    0.00       1         UniversLJ::~UniversLJ() [52]
+-----------------------------------------------
+                0.00    0.00       1/1           UniversLJ::initialiserCellules() [27]
+[53]     0.0    0.00    0.00       1         std::vector<Cellule, std::allocator<Cellule> >::reserve(unsigned long) [53]
+-----------------------------------------------
+
+ This table describes the call tree of the program, and was sorted by
+ the total amount of time spent in each function and its children.
+
+ Each entry in this table consists of several lines.  The line with the
+ index number at the left hand margin lists the current function.
+ The lines above it list the functions that called this function,
+ and the lines below it list the functions this one called.
+ This line lists:
+     index	A unique number given to each element of the table.
+		Index numbers are sorted numerically.
+		The index number is printed next to every function name so
+		it is easier to look up where the function is in the table.
+
+     % time	This is the percentage of the `total' time that was spent
+		in this function and its children.  Note that due to
+		different viewpoints, functions excluded by options, etc,
+		these numbers will NOT add up to 100%.
+
+     self	This is the total amount of time spent in this function.
+
+     children	This is the total amount of time propagated into this
+		function by its children.
+
+     called	This is the number of times the function was called.
+		If the function called itself recursively, the number
+		only includes non-recursive calls, and is followed by
+		a `+' and the number of recursive calls.
+
+     name	The name of the current function.  The index number is
+		printed after it.  If the function is a member of a
+		cycle, the cycle number is printed between the
+		function's name and the index number.
+
+
+ For the function's parents, the fields have the following meanings:
+
+     self	This is the amount of time that was propagated directly
+		from the function into this parent.
+
+     children	This is the amount of time that was propagated from
+		the function's children into this parent.
+
+     called	This is the number of times this parent called the
+		function `/' the total number of times the function
+		was called.  Recursive calls to the function are not
+		included in the number after the `/'.
+
+     name	This is the name of the parent.  The parent's index
+		number is printed after it.  If the parent is a
+		member of a cycle, the cycle number is printed between
+		the name and the index number.
+
+ If the parents of the function cannot be determined, the word
+ `<spontaneous>' is printed in the `name' field, and all the other
+ fields are blank.
+
+ For the function's children, the fields have the following meanings:
+
+     self	This is the amount of time that was propagated directly
+		from the child into the function.
+
+     children	This is the amount of time that was propagated from the
+		child's children to the function.
+
+     called	This is the number of times the function called
+		this child `/' the total number of times the child
+		was called.  Recursive calls by the child are not
+		listed in the number after the `/'.
+
+     name	This is the name of the child.  The child's index
+		number is printed after it.  If the child is a
+		member of a cycle, the cycle number is printed
+		between the name and the index number.
+
+ If there are any cycles (circles) in the call graph, there is an
+ entry for the cycle-as-a-whole.  This entry shows who called the
+ cycle (as parents) and the members of the cycle (as children.)
+ The `+' recursive calls entry shows the number of function calls that
+ were internal to the cycle, and the calls entry for each member shows,
+ for that member, how many times it was called from other members of
+ the cycle.
+
+Copyright (C) 2012-2025 Free Software Foundation, Inc.
+
+Copying and distribution of this file, with or without modification,
+are permitted in any medium without royalty provided the copyright
+notice and this notice are preserved.
+
+Index by function name
+
+  [48] savePVD(std::vector<int, std::allocator<int> > const&, std::vector<double, std::allocator<double> > const&) [22] Particule::setPosition(Vector const&) [34] Particule::getVitesse() const
+  [26] saveVTK(std::vector<Particule, std::allocator<Particule> > const&, int, double) [19] Particule::setForce(Vector const&) [6] Particule::getPosition() const
+   [7] Vector::Vector(double, double, double) [43] Particule::Particule(Vector const&, Vector const&, double, int, int, Vector const&) [38] Particule::getType() const
+  [18] Vector::operator=(Vector const&) [3] UniversLJ::calculerForces() [24] Particule::getForce() const
+  [10] Vector::operator-=(Vector const&) [27] UniversLJ::initialiserCellules() [37] Particule::getMasse() const
+   [8] Vector::operator+=(Vector const&) [11] UniversLJ::mettreAJourCellules() [47] UniversLJ::energieCinetique() const
+  [12] Cellule::getVoisines() [50] UniversLJ::setConditionsLimites(Univers::ConditionLimite, Univers::ConditionLimite) [15] UniversLJ::energiePotentielle() const
+  [35] Cellule::ajouterVoisine(Cellule*) [51] UniversLJ::UniversLJ(int const&, Vector const&, double const&, double, double) [53] std::vector<Cellule, std::allocator<Cellule> >::reserve(unsigned long)
+  [13] Cellule::viderParticules() [52] UniversLJ::~UniversLJ() [44] void std::vector<Particule, std::allocator<Particule> >::_M_realloc_append<Particule const&>(Particule const&)
+  [20] Cellule::ajouterParticule(Particule*) [16] Vector::norm() const [39] void std::vector<Cellule*, std::allocator<Cellule*> >::_M_realloc_append<Cellule* const&>(Cellule* const&)
+  [40] Cellule::Cellule(double, int, int, int) [36] Vector::norm2() const [41] void std::vector<Particule*, std::allocator<Particule*> >::_M_realloc_append<Particule* const&>(Particule* const&)
+  [25] Univers::sauvegardeVTK(int, double, int, std::vector<int, std::allocator<int> >&, std::vector<double, std::allocator<double> >&) [23] Vector::operator-(Vector const&) const [45] void std::vector<double, std::allocator<double> >::_M_realloc_append<double const&>(double const&)
+  [42] Univers::ajouterParticule(Particule const&) [14] Vector::operator*(double) const [46] void std::vector<int, std::allocator<int> >::_M_realloc_append<int const&>(int const&)
+   [2] Univers::avancerParticules(double, double) [9] Vector::operator+(Vector const&) const [4] _init
+  [49] Univers::Univers(int, int) [17] Cellule::centreCellule() const
+  [21] Particule::setVitesse(Vector const&) [5] Cellule::getParticuleList() const

@@ -47,29 +47,6 @@ TEST(UniversTest, CorrectAddParticulesPosition) {
     EXPECT_DOUBLE_EQ(u.getParticules()[0].getPosition().z(), 3.0);
 }
 
-// Reserve performance test
-
-TEST(UniversTest, ReserveIsFaster) {
-    int n = 32768;
-
-    auto t0 = std::chrono::high_resolution_clock::now();
-    UniversGravitationnel u1(3, 0);
-    for (int i = 0; i < n; ++i)
-        u1.ajouterParticule(Particule(Vector(0,0,0), Vector(0,0,0), 1.0, i, 0, Vector(0,0,0)));
-    double sans = std::chrono::duration<double>(
-        std::chrono::high_resolution_clock::now() - t0).count();
-
-    auto t2 = std::chrono::high_resolution_clock::now();
-    UniversGravitationnel u2(3, n);
-    for (int i = 0; i < n; ++i)
-        u2.ajouterParticule(Particule(Vector(0,0,0), Vector(0,0,0), 1.0, i, 0, Vector(0,0,0)));
-    double avec = std::chrono::duration<double>(
-        std::chrono::high_resolution_clock::now() - t2).count();
-
-    std::cout << "Sans reserve: " << sans << "s  Avec reserve: " << avec << "s\n";
-    EXPECT_LT(avec, sans);
-}
-
 // Forces test
 
 TEST(UniversTest, ForcesEmptyUnivers) {

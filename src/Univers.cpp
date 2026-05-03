@@ -91,9 +91,15 @@ void Univers::avancerParticules(double tEnd, double dt) {
         std::swap(forces, forces_old);
 
         for (size_t i = 0; i < N; ++i) {
-            Particule& p = particuleList[i];
-            Vector accel = forces[i] * inv_masses[i];
-            p.setPosition(p.getPosition() + p.getVitesse()*dt + accel*(0.5*dt*dt));
+            Particule& p = particuleList[i]; // une référence pour éviter des copies inutiles
+
+            Vector pos = p.getPosition(); // une copie pour modifier sans affecter l'original
+            const Vector& vel = p.getVitesse();
+            const double inv_m = inv_masses[i];
+
+            pos += vel * dt;
+            pos += forces_old[i] * (0.5*dt*dt*inv_m);
+            p.setPosition(pos);
         }
 
         mettreAJourCellules();
@@ -101,8 +107,9 @@ void Univers::avancerParticules(double tEnd, double dt) {
 
         for (size_t i = 0; i < N; ++i) {
             Particule& p = particuleList[i];
-            p.setVitesse(p.getVitesse()
-                + (forces[i] + forces_old[i]) * (0.5*dt * inv_masses[i]));
+            Vector vel = p.getVitesse();
+            vel += (forces[i] + forces_old[i]) * (0.5*dt * inv_masses[i]);
+            p.setVitesse(vel);
         }
 
         sauvegardeVTK(step, t, save_every, vtk_steps, vtk_times);

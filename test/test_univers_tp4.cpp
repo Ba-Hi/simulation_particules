@@ -4,7 +4,7 @@
 #include "Vector.hpp"
 #include <cmath>
 
-// ── Initialisation des cellules ──────────────────────────────
+// Initialisation des cellules 
 
 TEST(UniversTp4Test, NombreCellules2D) {
     // Lx=10, Ly=10, r_cut=2.5 → floor(10/2.5)=4 → 4*4=16 cellules
@@ -27,7 +27,7 @@ TEST(UniversTp4Test, VoisinesCoin2D) {
     EXPECT_EQ(u.getCellule(0, 0, 0).getVoisines().size(), 4);
 }
 
-// ── mettreAJourCellules ──────────────────────────────────────
+// mettreAJourCellules
 
 TEST(UniversTp4Test, ParticuleDansBonneCellule) {
     UniversLJ u(2, Vector(10.0, 10.0, 0.0), 2.5, 1.0, 1.0);
@@ -87,7 +87,7 @@ TEST(UniversTp4Test, ConditionLimitePeriodique) {
     EXPECT_NEAR(u.getParticules()[1].getPosition().x(), 0.3, 1e-9);
 }
 
-// ── Forces de Lennard-Jones ──────────────────────────────────
+// Forces de Lennard-Jones
 
 TEST(UniversTp4Test, ForceNulleAuMinimum) {
     // r = 2^(1/6)*sigma → force nulle (minimum du potentiel LJ)

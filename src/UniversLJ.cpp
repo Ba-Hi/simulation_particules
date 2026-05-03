@@ -1,6 +1,7 @@
 #include "UniversLJ.hpp"
 #include <iostream>
 #include <cmath>
+#include <algorithm>
 #include "ExportCsv.hpp"
 
 
@@ -243,69 +244,116 @@ void UniversLJ::mettreAJourCellules() {
     }
 }
 
-void UniversLJ::appliquerConditionsLimites(Univers::ConditionLimite cx, Univers::ConditionLimite cy, Univers::ConditionLimite cz) {
-    auto appliquerAxe = [&](double &coord, double limit, Univers::ConditionLimite condition, double &velocity) {
-        bool absorb = false;
+// void UniversLJ::appliquerConditionsLimites(Univers::ConditionLimite cx, Univers::ConditionLimite cy, Univers::ConditionLimite cz) {
+//     auto appliquerAxe = [&](double &coord, double limit, Univers::ConditionLimite condition, double &velocity) {
+//         bool absorb = false;
 
-        if (condition == Univers::ConditionLimite::REFLEXION) {
+//         if (condition == Univers::ConditionLimite::REFLEXION) {
+//             while (coord < 0.0 || coord >= limit) {
+//                 if (coord < 0.0) {
+//                     coord = -coord;
+//                     velocity = -velocity;
+//                 } else {
+//                     coord = 2.0 * limit - coord;
+//                     velocity = -velocity;
+//                 }
+//             }
+//         } else if (condition == Univers::ConditionLimite::PERIODIQUE) {
+//             if (limit > 0.0) {
+//                 coord = std::fmod(coord, limit);
+//                 if (coord < 0.0) coord += limit;
+//             }
+//         } else if (condition == Univers::ConditionLimite::ABSORPTION) {
+//             if (coord < 0.0 || coord >= limit) {
+//                 absorb = true;
+//             }
+//         }
+
+//         return absorb;
+//     };
+
+//     std::vector<Particule> survivantes;
+//     survivantes.reserve(particuleList.size());
+
+//     for (Particule& p : particuleList) {
+//         Vector pos = p.getPosition();
+//         Vector vel = p.getVitesse();
+//         bool absorb = false;
+
+//         double x = pos.x();
+//         double y = pos.y();
+//         double z = pos.z();
+//         double vx = vel.x();
+//         double vy = vel.y();
+//         double vz = vel.z();
+
+//         absorb = appliquerAxe(x, l_d.x(), cx, vx);
+
+//         if (dimension >= 2)
+//             absorb = absorb || appliquerAxe(y, l_d.y(), cy, vy);
+
+//         if (dimension == 3)
+//             absorb = absorb || appliquerAxe(z, l_d.z(), cz, vz);
+
+
+//         if (!absorb) {
+//             p.setPosition(Vector(x, y, z));
+//             p.setVitesse(Vector(vx, vy, vz));
+//             survivantes.push_back(p);
+//         }
+//     }
+
+//     if (cx == Univers::ConditionLimite::ABSORPTION ||
+//         cy == Univers::ConditionLimite::ABSORPTION ||
+//         cz == Univers::ConditionLimite::ABSORPTION) {
+//         particuleList = survivantes;
+//         n_particules = particuleList.size();
+//     }
+// }
+
+void UniversLJ::appliquerConditionsLimites(
+        Univers::ConditionLimite cx,
+        Univers::ConditionLimite cy,
+        Univers::ConditionLimite cz) {
+
+    auto appliquerAxe = [&](double& coord, double limit,
+                             Univers::ConditionLimite cond,
+                             double& vel) -> bool {
+        if (cond == Univers::ConditionLimite::REFLEXION) {
             while (coord < 0.0 || coord >= limit) {
-                if (coord < 0.0) {
-                    coord = -coord;
-                    velocity = -velocity;
-                } else {
-                    coord = 2.0 * limit - coord;
-                    velocity = -velocity;
-                }
+                coord = (coord < 0.0) ? -coord : 2.0*limit - coord;
+                vel = -vel;
             }
-        } else if (condition == Univers::ConditionLimite::PERIODIQUE) {
-            if (limit > 0.0) {
-                coord = std::fmod(coord, limit);
-                if (coord < 0.0) coord += limit;
-            }
-        } else if (condition == Univers::ConditionLimite::ABSORPTION) {
-            if (coord < 0.0 || coord >= limit) {
-                absorb = true;
-            }
+        } else if (cond == Univers::ConditionLimite::PERIODIQUE) {
+            if (limit > 0.0) { coord = std::fmod(coord, limit); if (coord < 0.0) coord += limit; }
+        } else if (cond == Univers::ConditionLimite::ABSORPTION) {
+            return (coord < 0.0 || coord >= limit);
         }
-
-        return absorb;
+        return false;
     };
 
-    std::vector<Particule> survivantes;
-    survivantes.reserve(particuleList.size());
+    bool anyAbsorption = (cx == Univers::ConditionLimite::ABSORPTION ||
+                          cy == Univers::ConditionLimite::ABSORPTION ||
+                          cz == Univers::ConditionLimite::ABSORPTION);
 
-    for (Particule& p : particuleList) {
-        Vector pos = p.getPosition();
-        Vector vel = p.getVitesse();
-        bool absorb = false;
+    auto it = std::remove_if(particuleList.begin(), particuleList.end(),
+        [&](Particule& p) {
+            double x = p.getPosition().x(), y = p.getPosition().y(), z = p.getPosition().z();
+            double vx = p.getVitesse().x(), vy = p.getVitesse().y(), vz = p.getVitesse().z();
 
-        double x = pos.x();
-        double y = pos.y();
-        double z = pos.z();
-        double vx = vel.x();
-        double vy = vel.y();
-        double vz = vel.z();
+            bool absorb = appliquerAxe(x, l_d.x(), cx, vx);
+            if (dimension >= 2) absorb |= appliquerAxe(y, l_d.y(), cy, vy);
+            if (dimension == 3) absorb |= appliquerAxe(z, l_d.z(), cz, vz);
 
-        absorb = appliquerAxe(x, l_d.x(), cx, vx);
+            if (!absorb) {
+                p.setPosition(Vector(x, y, z));
+                p.setVitesse(Vector(vx, vy, vz));
+            }
+            return absorb;
+        });
 
-        if (dimension >= 2)
-            absorb = absorb || appliquerAxe(y, l_d.y(), cy, vy);
-
-        if (dimension == 3)
-            absorb = absorb || appliquerAxe(z, l_d.z(), cz, vz);
-
-
-        if (!absorb) {
-            p.setPosition(Vector(x, y, z));
-            p.setVitesse(Vector(vx, vy, vz));
-            survivantes.push_back(p);
-        }
-    }
-
-    if (cx == Univers::ConditionLimite::ABSORPTION ||
-        cy == Univers::ConditionLimite::ABSORPTION ||
-        cz == Univers::ConditionLimite::ABSORPTION) {
-        particuleList = survivantes;
+    if (anyAbsorption) {
+        particuleList.erase(it, particuleList.end());
         n_particules = particuleList.size();
     }
 }

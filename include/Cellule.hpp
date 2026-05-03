@@ -52,7 +52,7 @@ public :
      * @brief Accède à la liste des particules
      * @return Référence vers le vecteur de particules
      */
-    std::vector<Particule*>& getParticuleList();
+    const std::vector<Particule*>& getParticuleList() const;
 
     /**
      * @brief Accède à la liste des cellules voisines

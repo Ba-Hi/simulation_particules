@@ -52,13 +52,6 @@ int main() {
         }
     }
 
-    std::cout << "Nombre de particules : " << u.getParticules().size() << "\n";
-    std::cout << "  Rectangle : 160x40 = 6400 particules (cat 0)\n";
-    std::cout << "  Carré     : 40x40  = 1600 particules (cat 1)\n";
-    std::cout << "Simulation de t=0 à t=" << tEnd << " avec dt=" << dt << "\n";
-    std::cout << "Nombre de pas : " << (int)(tEnd / dt) << "\n";
-    std::cout << "Démarrage...\n";
-
     u.initialiserCellules();
     u.avancerParticules(tEnd, dt);
 

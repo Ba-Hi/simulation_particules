@@ -63,5 +63,5 @@ Une particule est d'abord initialisée avec ses données physiques (position, vi
 
 ![image](./diagram_etats_transitions.png)
 
-
-
+### Question 7 : Diagramme de classe d'analyse
+![image](./diagram_classe.png)

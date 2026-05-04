@@ -7,7 +7,7 @@
 
 /**
  * @brief Sauvegarde les particules dans un fichier VTK XML (.vtp)
- *        lisible par Paraview/Visit.
+ *        lisible par Paraview.
  * 
  * @param particles Liste des particules
  * @param step      Numéro du pas de temps (utilisé pour le nom du fichier)

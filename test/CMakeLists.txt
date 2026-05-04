@@ -5,7 +5,7 @@ add_executable(test_univers      test_univers.cpp)
 add_executable(test_cellule      test_cellule.cpp)
 add_executable(test_univers_tp4  test_univers_tp4.cpp)
 add_executable(test_univers_1D  test_univers_1D.cpp)
-add_executable(test_performance  test_performance_tp2.cpp)
+add_executable(test_performance  perf/test_performance_tp2.cpp)
 
 foreach(t test_vector test_particule test_univers test_cellule test_univers_tp4 test_univers_1D)
     target_link_libraries(${t} particules gtest_main)

@@ -1,31 +1,40 @@
 # Simulation de Particules - Projet C++
 
 ## Description
-Ce projet implémente un système de simulation de particules en 3D utilisant l'algorithme d'intégration de **Störmer-Verlet**. Il permet de gérer des univers de particules, de calculer des forces gravitationnelles ou d'interaction, et d'optimiser les performances via des structures de données comme les grilles de cellules (TP4).
+Ce projet implémente un moteur de simulation de particules en N-dimensions (principalement 1D, 2D et 3D) développé en C++. Il utilise l'algorithme d'intégration numérique de **Störmer-Verlet** pour modéliser la dynamique de systèmes physiques complexes, incluant :
+- **L'interaction gravitationnelle** (simulation de systèmes planétaires, ex: le Système Solaire).
+- **Le potentiel de Lennard-Jones** (dynamique moléculaire, simulation de collisions, gaz et ondes de choc).
+
+Le projet met un accent fort sur l'**optimisation spatiale et algorithmique**, avec des fonctionnalités avancées comme la méthode des cellules liées pour réduire la complexité algorithmique des grandes simulations.
+
+## Fonctionnalités Principales
+- **Intégrateur Störmer-Verlet** : Avancement temporel stable et conservatif pour la dynamique moléculaire.
+- **Modèles Physiques** : 
+  - `UniversGravitationnel` : Loi de la gravitation universelle de Newton.
+  - `UniversLJ` : Potentiel de Lennard-Jones avec gestion de distance de coupure ($r_{cut}$).
+- **Optimisations des Performances** :
+  - Découpage spatial via maillage (`Cellule`) et listes de voisinage limitant le calcul aux cellules adjacentes, réduisant la complexité de $O(N^2)$ à $O(N)$.
+  - Exploitation de la 3ème loi de Newton ($\mathbf{F}_{ji} = -\mathbf{F}_{ij}$) limitant de moitié les évaluations de force.
+  - Pré-allocation mémoire (`std::vector::reserve`) et gestion sans copie (in-place) lors de l'application des conditions aux limites.
+  - Support de flags d'optimisation agressifs (`-O3`, `-march=native`, `-ffast-math`).
+- **Conditions aux limites paramétrables** : Périodiques, Réflexion, et Absorption.
+- **Export et Visualisation** : Génération de fichiers au format VTK (`.pvd`, `.vtp`) pour une visualisation 3D interactive, ainsi que des exports CSV traditionnels.
 
 ## Structure du Projet
-- `include/` : Fichiers d'en-tête (.hpp)
-- `src/` : Code source (.cpp)
-- `test/` : Tests unitaires utilisant GoogleTest
-- `demo/` : Exemples d'utilisation de la bibliothèque
-
-## Analyse UML (Concepts Métier)
-
-### Cas d'Utilisation
-L'utilisateur peut configurer l'univers, ajouter des particules et lancer une simulation temporelle. Les données peuvent être chargées ou sauvegardées via le système de fichiers.
-
-### Modèle du Domaine (Classes d'analyse)
-- **Univers** : Gère la collection globale et l'évolution temporelle.
-- **Particule** : Entité physique définie par sa masse et sa cinématique.
-- **Vector** : Outil mathématique pour les calculs en 3D.
-- **Cellule** : Optimisation spatiale pour le calcul des interactions locales.
+- `include/` : Fichiers d'en-tête (.hpp) définissant l'API orientée objet (`Univers`, `Particule`, `Vector`, `Cellule`, etc.).
+- `src/` : Fichiers sources (.cpp) contenant les implémentations des classes.
+- `test/` : Tests unitaires et physiques (validations de conservation d'énergie, etc.) basés sur **GoogleTest**.
+- `demo/` : Exemples exécutables complets (collisions 2D/3D, dynamique du système solaire).
+- `_reponses/` : Fichiers Markdown contenant l'analyse technique, l'étude des performances (via `perf` ou `gprof`) et les réponses aux labs.
 
 ## Compilation et Installation
 
 ### Prérequis
 - CMake (>= 3.16)
-- Compilateur supportant le C++17 (GCC, Clang)
+- Compilateur supportant le standard **C++17** (GCC, Clang)
+- GoogleTest (pour la compilation des tests automatiques)
 - Doxygen (pour la documentation)
+- **ParaView** (recommandé pour visualiser les rendus d'animation physique)
 
 ### Instructions de build
 ```bash
@@ -45,7 +54,7 @@ make
 Le projet utilise GoogleTest. Pour lancer les tests après la compilation :
 
 ```bash
-
+# lancer tous les tests à la fois
 ctest
 # Ou lancer les binaires directement
 ./test/test_univers
@@ -56,7 +65,12 @@ ctest
 Pour générer la documentation HTML via Doxygen :
 
 ```bash
+make doc
+```
+qui génère `docu/html/index.html` contenant la documentation oxygen.
 
+Ou bien depuis la racine du projet :
+
+```bash
 doxygen Doxyfile
-
 ```

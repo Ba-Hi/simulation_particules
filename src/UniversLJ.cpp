@@ -3,6 +3,7 @@
 #include <cmath>
 #include <algorithm>
 #include "ExportCsv.hpp"
+#include "Force.hpp"
 
 
 
@@ -45,6 +46,9 @@ UniversLJ::UniversLJ(const int& dimension, const Vector& l_d, const double& r_cu
         throw std::invalid_argument("La dimension est soit 1D, 2D, ou 3D.");
     }
 }
+
+// definir le vecteur gravity :
+
 
 void UniversLJ::initialiserCellules() {
     celluleList.clear();
@@ -105,14 +109,12 @@ size_t UniversLJ::getNbCellules() const {
 }
 
 
-std::vector<Vector> UniversLJ::calculerForces(bool use_potentiel_reflexion) {
+std::vector<Vector> UniversLJ::calculerForces(bool use_potentiel_reflexion, bool use_gravity) {
 
     const size_t N = particuleList.size();
     std::vector<Vector> forces(N, Vector(0.0, 0.0, 0.0));
 
     const double r_cut2 = r_cut * r_cut;
-    const double sigma2 = sigma * sigma;
-    const double coeff  = 24.0 * epsilon;
 
     // Helper to convert pointer
     auto idx = [&](Particule* p) -> size_t {
@@ -129,31 +131,10 @@ std::vector<Vector> UniversLJ::calculerForces(bool use_potentiel_reflexion) {
         // intracell
         for (size_t a = 0; a < parts.size(); ++a) {
             Particule* pi_ptr = parts[a];
-            const Vector& posi = pi_ptr->getPosition();
-            const double xi = posi.x();
-            const double yi = posi.y();
-            const double zi = posi.z();
 
             for (size_t b = a + 1; b < parts.size(); ++b) {
                 Particule* pj_ptr = parts[b];
-                const Vector& posj = pj_ptr->getPosition();
-                const double xj = posj.x();
-                const double yj = posj.y();
-                const double zj = posj.z();
-
-                const double dx = xj - xi;
-                const double dy = yj - yi;
-                const double dz = zj - zi;
-
-                const double dist2 = dx*dx + dy*dy + dz*dz + 1e-12;
-                if (dist2 > r_cut2) continue;
-
-                const double sr2 = sigma2 / dist2;
-                const double sr6 = sr2 * sr2 * sr2;
-
-                const double f = coeff * sr6 * (1.0 - 2.0 * sr6) / dist2;
-
-                const Vector fij(dx*f, dy*f, dz*f);
+                Vector fij = Force::lennardJones(*pi_ptr, *pj_ptr, epsilon, sigma, r_cut2);
 
                 forces[idx(pi_ptr)] += fij;
                 forces[idx(pj_ptr)] -= fij;
@@ -168,35 +149,20 @@ std::vector<Vector> UniversLJ::calculerForces(bool use_potentiel_reflexion) {
             const auto& voisins = cj->getParticuleList();
 
             for (Particule* pi_ptr : parts) {
-                const Vector& posi = pi_ptr->getPosition();
-                const double xi = posi.x();
-                const double yi = posi.y();
-                const double zi = posi.z();
 
                 for (Particule* pj_ptr : voisins) {
-                    const Vector& posj = pj_ptr->getPosition();
-                    const double xj = posj.x();
-                    const double yj = posj.y();
-                    const double zj = posj.z();
-
-                    const double dx = xj - xi;
-                    const double dy = yj - yi;
-                    const double dz = zj - zi;
-
-                    const double dist2 = dx*dx + dy*dy + dz*dz + 1e-12;
-                    if (dist2 > r_cut2) continue;
-
-                    const double sr2 = sigma2 / dist2;
-                    const double sr6 = sr2 * sr2 * sr2;
-
-                    const double f = coeff * sr6 * (1.0 - 2.0 * sr6) / dist2;
-
-                    const Vector fij(dx*f, dy*f, dz*f);
+                    Vector fij = Force::lennardJones(*pi_ptr, *pj_ptr, epsilon, sigma, r_cut2);
 
                     forces[idx(pi_ptr)] += fij;
                     forces[idx(pj_ptr)] -= fij;
                 }
             }
+        }
+    }
+
+    if (use_gravity) {
+        for (size_t i = 0; i < N; ++i) {
+            forces[i] += Force::poids(particuleList[i], gravity);
         }
     }
 
@@ -254,12 +220,7 @@ void UniversLJ::mettreAJourCellules(bool use_conditions_limites) {
     }
 }
 
-double UniversLJ::calculerForceParoi(double d) {
-    const double s2r2 = sigma*sigma / (4.0*d*d);
-    const double sr6 = s2r2 * s2r2 * s2r2;
-    const double coeff = 24.0 * epsilon / d;
-    return coeff * sr6 * (2.0 * sr6 - 1.0);
-}
+
 
 void UniversLJ::appliquerForcesParoi(){
     for (Particule& p : particuleList) {
@@ -271,36 +232,36 @@ void UniversLJ::appliquerForcesParoi(){
         // Paroi x=0
         if (x < r_cut) {
             double d = x;
-            fx += calculerForceParoi(d);
+            fx += Force::paroiLennardJones(d, epsilon, sigma);
         }
         // Paroi x=Lx
         if (x > l_d.x() - r_cut) {
             double d = l_d.x() - x;
-            fx -= calculerForceParoi(d);
+            fx -= Force::paroiLennardJones(d, epsilon, sigma);
         }
 
         if (dimension >= 2) {
             // Paroi y=0
             if (y < r_cut) {
                 double d = y;
-                fy += calculerForceParoi(d);
+                fy += Force::paroiLennardJones(d, epsilon, sigma);
             }
             // Paroi y=Ly
             if (y > l_d.y() - r_cut) {
                 double d = l_d.y() - y;
-                fy -= calculerForceParoi(d);
+                fy -= Force::paroiLennardJones(d, epsilon, sigma);
             }
 
             if (dimension == 3) {
                 // Paroi z=0
                 if (z < r_cut) {
                     double d = z;
-                    fz += calculerForceParoi(d);
+                    fz += Force::paroiLennardJones(d, epsilon, sigma);
                 }
                 // Paroi z=Lz
                 if (z > l_d.z() - r_cut) {
                     double d = l_d.z() - z;
-                    fz -= calculerForceParoi(d);
+                    fz -= Force::paroiLennardJones(d, epsilon, sigma);
                 }
             }
         }

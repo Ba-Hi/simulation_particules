@@ -20,9 +20,11 @@ public:
 
     /**
      * @brief Calcule les forces gravitationnelles entre toutes les paires de particules
+     * @param use_potentiel_reflexion Active les parois (inutilisé ici mais requis par l'interface)
+     * @param use_gravity Active le champ gravitationnel de poids
      * @return Un vecteur contenant les forces associées à chaque particule
      */
-    std::vector<Vector> calculerForces(bool use_potentiel_reflexion=false) override;
+    std::vector<Vector> calculerForces(bool use_potentiel_reflexion=false, bool use_gravity=false) override;
 };
 
 #endif

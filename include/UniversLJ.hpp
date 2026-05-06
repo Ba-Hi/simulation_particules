@@ -70,9 +70,10 @@ public:
     /**
      * @brief Calcule les forces de Lennard-Jones en utilisant les cellules liées
      * @param use_potentiel_reflexion Si vrai, applique également les forces de potentiel de réflexion aux parois
+     * @param use_gravity Si vrai, applique le champ gravitationnel
      * @return Un vecteur contenant les forces associées à chaque particule
      */
-    std::vector<Vector> calculerForces(bool use_potentiel_reflexion=false) override;
+    std::vector<Vector> calculerForces(bool use_potentiel_reflexion=false, bool use_gravity=false) override;
 
     /**
      * @brief Met à jour l'appartenance des particules aux cellules
@@ -112,8 +113,6 @@ private:
      * @return Indice 1D
      */
     int indice1D(int i, int j, int k);
-
-    double calculerForceParoi(double d);
     
     void appliquerForcesParoi();
 

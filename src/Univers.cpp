@@ -3,9 +3,10 @@
 #include <filesystem>
 #include "ExportVTK.hpp"
 #include "ExportCsv.hpp"
+#include <cmath>
 
 Univers::Univers(int dim, int reserveCount)
-    : dimension(dim), n_particules(0) {
+    : dimension(dim), n_particules(0), gravity(0.0, 0.0, 0.0) {
     particuleList.reserve(reserveCount);
 }
 
@@ -46,6 +47,16 @@ void Univers::ajouterParticule(const Particule& p) {
     n_particules = particuleList.size();
 }
 
+void Univers::setGravity(const Vector& g) {
+    gravity = g;
+}
+
+void Univers::setLimiteEnergie(double cible_Ec, int frequence) {
+    this->limite_energie_active = true;
+    this->cible_Ec = cible_Ec;
+    this->frequence_limite = frequence;
+}
+
 void Univers::sauvegardeVTK(int step, double t, int save_every,
                            std::vector<int>& vtk_steps,
                            std::vector<double>& vtk_times) {
@@ -61,7 +72,7 @@ void Univers::finaliseSauvegardeVTK(const std::vector<int>& vtk_steps,
     savePVD(vtk_steps, vtk_times);
 }
 
-void Univers::avancerParticules(double tEnd, double dt, bool use_potentiel_reflexion) {
+void Univers::avancerParticules(double tEnd, double dt, bool use_potentiel_reflexion, bool use_gravity) {
     if (particuleList.empty()) return;
 
     long unsigned int N = particuleList.size();
@@ -71,7 +82,7 @@ void Univers::avancerParticules(double tEnd, double dt, bool use_potentiel_refle
     for (size_t i = 0; i < N; i++)
         inv_masses[i] = 1.0 / particuleList[i].getMasse();
 
-    std::vector<Vector> forces = calculerForces(use_potentiel_reflexion);
+    std::vector<Vector> forces = calculerForces(use_potentiel_reflexion, use_gravity);
     std::vector<Vector> forces_old = forces;
     
 
@@ -103,13 +114,27 @@ void Univers::avancerParticules(double tEnd, double dt, bool use_potentiel_refle
         }
 
         mettreAJourCellules();
-        forces = calculerForces(use_potentiel_reflexion);
+        forces = calculerForces(use_potentiel_reflexion, use_gravity);
 
         for (size_t i = 0; i < N; ++i) {
             Particule& p = particuleList[i];
             Vector vel = p.getVitesse();
             vel += (forces[i] + forces_old[i]) * (0.5*dt * inv_masses[i]);
             p.setVitesse(vel);
+        }
+
+        // Régulation de l'énergie cinétique
+        if (limite_energie_active && step % frequence_limite == 0) {
+            double current_Ec = 0.0;
+            for (const auto& p : particuleList) {
+                current_Ec += 0.5 * p.getMasse() * p.getVitesse().norm2();
+            }
+            if (current_Ec > 1e-12) {
+                double beta = std::sqrt(cible_Ec / current_Ec);
+                for (auto& p : particuleList) {
+                    p.setVitesse(p.getVitesse() * beta);
+                }
+            }
         }
 
         sauvegardeVTK(step, t, save_every, vtk_steps, vtk_times);

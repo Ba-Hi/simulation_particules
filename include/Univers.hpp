@@ -19,6 +19,11 @@ protected:
     int dimension; ///< Dimension de l'espace (1D, 2D, 3D)
     std::vector<Particule> particuleList; ///< Liste des particules
     int n_particules; ///< Nombre de particules
+    Vector gravity; ///< Champ de gravité uniforme (poids)
+
+    bool limite_energie_active = false; ///< Active la limitation d'énergie
+    double cible_Ec = 0.0; ///< Energie cinétique cible
+    int frequence_limite = 1000; ///< Fréquence de mise à l'échelle
 
 public:
     enum class ConditionLimite {
@@ -50,8 +55,9 @@ public:
      * @param tEnd Temps final de la simulation
      * @param dt Pas de temps
      * @param use_potentiel_reflexion Active les forces de parois
+     * @param use_gravity Active le champ gravitationnel de poids
      */
-    void avancerParticules(double tEnd, double dt, bool use_potentiel_reflexion = false);
+    void avancerParticules(double tEnd, double dt, bool use_potentiel_reflexion = false, bool use_gravity = false);
 
     /**
      * @brief Getter de la dimension
@@ -80,9 +86,10 @@ public:
     /**
      * @brief Calcule les forces appliquées sur chaque particule
      * @param use_potentiel_reflexion Si vrai, applique également les forces de potentiel de réflexion aux parois
+     * @param use_gravity Si vrai, applique le champ de gravité uniforme
      * @return Un vecteur contenant les forces associées à chaque particule
      */
-    virtual std::vector<Vector> calculerForces(bool use_potentiel_reflexion=false) = 0;
+    virtual std::vector<Vector> calculerForces(bool use_potentiel_reflexion=false, bool use_gravity=false) = 0;
 
     /**
      * @brief Met à jour les cellules (si applicable)
@@ -110,6 +117,19 @@ public:
      * @return Référence sur l'objet courant.
      */
     Univers& setParticules(const std::vector<Particule>& particules);
+
+    /**
+     * @brief Définit le champ de gravité uniforme
+     * @param g Le vecteur gravité (ex: Vector(0, -9.81, 0))
+     */
+    void setGravity(const Vector& g);
+
+    /**
+     * @brief Définit une limite pour l'énergie cinétique
+     * @param cible_Ec Energie cinétique cible
+     * @param frequence Fréquence de mise à l'échelle (en nombre d'itérations)
+     */
+    void setLimiteEnergie(double cible_Ec, int frequence = 1000);
 
 private:
     /**

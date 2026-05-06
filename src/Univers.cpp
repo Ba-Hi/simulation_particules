@@ -92,9 +92,9 @@ void Univers::avancerParticules(double tEnd, double dt, bool use_potentiel_refle
 
     double t = 0.0;
     int step = 0;
-    // const int save_every = (tEnd / dt) / 200; // 200 frames au total
-    int save_every = (tEnd / dt) / 1500; // 1500 frames pour avoir un beau ralenti
-    if (save_every < 1) save_every = 1;
+    const int save_every = (tEnd / dt) / 200; // 200 frames au total
+    // int save_every = (tEnd / dt) / 1500; // 1500 frames pour avoir un beau ralenti
+    // if (save_every < 1) save_every = 1;
 
 
     std::vector<int>    vtk_steps;

@@ -2,6 +2,7 @@
 #define UNIVERS_HPP
 
 #include <vector>
+#include <map>
 #include "Particule.hpp"
 #include "Vector.hpp"
 
@@ -23,6 +24,7 @@ protected:
 
     bool limite_energie_active = false; ///< Active la limitation d'énergie
     double cible_Ec = 0.0; ///< Energie cinétique cible
+    std::map<int, double> cibles_Ec_par_type; ///< Energies cibles par catégorie
     int frequence_limite = 1000; ///< Fréquence de mise à l'échelle
 
 public:
@@ -128,8 +130,9 @@ public:
      * @brief Définit une limite pour l'énergie cinétique
      * @param cible_Ec Energie cinétique cible
      * @param frequence Fréquence de mise à l'échelle (en nombre d'itérations)
+     * @param type Catégorie ciblée (par défaut -1 pour toutes les particules)
      */
-    void setLimiteEnergie(double cible_Ec, int frequence = 1000);
+    void setLimiteEnergie(double cible_Ec, int frequence = 1000, int type = -1);
 
 private:
     /**

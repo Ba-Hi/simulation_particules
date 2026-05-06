@@ -24,7 +24,7 @@ int main() {
     const double d = std::pow(2.0, 1.0/6.0) * sigma;
 
     UniversLJ u(2, Vector(Lx, Ly), r_cut, epsilon, sigma);
-    u.setGravity(Vector(0.0, -12.0)); // champ de gravité vers le bas
+    u.setGravity(Vector(0.0, -12)); // champ de gravité vers le bas
 
     // reflexion
     u.setConditionsLimites(
@@ -46,8 +46,11 @@ int main() {
     double cy = 2.0 * d + hauteur_bain + 15.0 * d + radius; // 15*d d'espacement avec le bain
     int count_n1 = Forme::creerCercle(u, cx, cy, radius, d, m, 1, id, Vector(0.0, -10.0, 0.0));
 
-    const double Ec_D = 0.005 * (count_n1 + count_n2);
-    u.setLimiteEnergie(Ec_D, 1000); // Application de la limite
+    const double Ec_bain = 0.005 * count_n2;
+    const double Ec_goutte = 0.005 * count_n1;
+    
+    u.setLimiteEnergie(Ec_bain, 1000, 0); // Limite pour le bain (type 0)
+    u.setLimiteEnergie(Ec_goutte, 1000, 1); // Limite pour la goutte (type 1)
 
 
     u.initialiserCellules();
@@ -56,6 +59,4 @@ int main() {
     u.avancerParticules(tEnd, dt, true, true);
     std::cout << "Simulation terminée\n";
     return 0;
-
-    
 }

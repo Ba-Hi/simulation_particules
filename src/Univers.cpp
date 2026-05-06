@@ -61,7 +61,7 @@ void Univers::finaliseSauvegardeVTK(const std::vector<int>& vtk_steps,
     savePVD(vtk_steps, vtk_times);
 }
 
-void Univers::avancerParticules(double tEnd, double dt) {
+void Univers::avancerParticules(double tEnd, double dt, bool use_potentiel_reflexion) {
     if (particuleList.empty()) return;
 
     long unsigned int N = particuleList.size();
@@ -71,7 +71,7 @@ void Univers::avancerParticules(double tEnd, double dt) {
     for (size_t i = 0; i < N; i++)
         inv_masses[i] = 1.0 / particuleList[i].getMasse();
 
-    std::vector<Vector> forces = calculerForces();
+    std::vector<Vector> forces = calculerForces(use_potentiel_reflexion);
     std::vector<Vector> forces_old = forces;
     
 
@@ -103,7 +103,7 @@ void Univers::avancerParticules(double tEnd, double dt) {
         }
 
         mettreAJourCellules();
-        forces = calculerForces();
+        forces = calculerForces(use_potentiel_reflexion);
 
         for (size_t i = 0; i < N; ++i) {
             Particule& p = particuleList[i];

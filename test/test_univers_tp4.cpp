@@ -145,3 +145,62 @@ TEST(UniversTp4Test, Newton3emeLoi) {
     auto forces = u.calculerForces();
     EXPECT_NEAR(forces[0].x() + forces[1].x(), 0.0, 1e-10);
 }
+
+//conditions aux limites et potentiel de paroi
+
+TEST(UniversTp4Test, ForceParoi_SansPotentiel) {
+    UniversLJ u(2, Vector(20.0, 20.0), 2.5, 1.0, 1.0);
+    // Particule très proche du mur gauche (x=0.5)
+    u.ajouterParticule(Particule(Vector(0.5, 10.0, 0.0), Vector(0,0,0), 1.0, 0, 0, Vector(0,0,0)));
+    u.initialiserCellules();
+
+    // calculerForces(false) : Le potentiel de paroi n'est pas calculé
+    auto forces = u.calculerForces(false);
+
+    // La force doit être nulle car la particule est isolée et la force des parois est désactivée
+    EXPECT_NEAR(forces[0].x(), 0.0, 1e-10);
+    EXPECT_NEAR(forces[0].y(), 0.0, 1e-10);
+}
+
+TEST(UniversTp4Test, ForceParoi_AvecPotentiel_MurGaucheX) {
+    UniversLJ u(2, Vector(20.0, 20.0, 0.0), 2.5, 1.0, 1.0);
+    // Particule très proche du mur gauche (x < r_cut)
+    u.ajouterParticule(Particule(Vector(0.5, 10.0, 0.0), Vector(0,0,0), 1.0, 0, 0, Vector(0,0,0)));
+    u.initialiserCellules();
+
+    // calculerForces(true) : Active le potentiel de paroi
+    auto forces = u.calculerForces(true);
+
+    // La particule doit être repoussée par le mur gauche vers la droite (x positif)
+    EXPECT_GT(forces[0].x(), 0.0); 
+    EXPECT_NEAR(forces[0].y(), 0.0, 1e-10);
+}
+
+TEST(UniversTp4Test, ForceParoi_AvecPotentiel_MurDroitX) {
+    UniversLJ u(2, Vector(20.0, 20.0, 0.0), 2.5, 1.0, 1.0);
+    // Particule très proche du mur droit (x > Lx - r_cut)
+    u.ajouterParticule(Particule(Vector(19.5, 10.0, 0.0), Vector(0,0,0), 1.0, 0, 0, Vector(0,0,0)));
+    u.initialiserCellules();
+
+    auto forces = u.calculerForces(true);
+
+    // La particule doit être repoussée par le mur droit vers la gauche (x négatif)
+    EXPECT_LT(forces[0].x(), 0.0);
+    EXPECT_NEAR(forces[0].y(), 0.0, 1e-10);
+}
+
+TEST(UniversTp4Test, ConditionLimite_ReflexionCinematique_SansPotentiel) {
+    // Test pour valider la réflexion strictement cinématique (lorsque la particule sort déjà du domaine)
+    UniversLJ u(1, Vector(10.0, 0.0, 0.0), 2.5, 1.0, 1.0);
+    u.setConditionsLimites(Univers::ConditionLimite::REFLEXION);
+    
+    // Particule qui a virtuellement dépassé le mur gauche (x = -1.5) avec une vitesse vers la gauche
+    u.ajouterParticule(Particule(Vector(-1.5, 0.0, 0.0), Vector(-4.0, 0.0, 0.0), 1.0, 0, 0, Vector(0,0,0)));
+    
+    // L'appel à initialiserCellules() invoque mettreAJourCellules(true) qui gère le rebond cinématique
+    u.initialiserCellules(); 
+
+    // La particule doit avoir été téléportée à x = +1.5 et sa vitesse inversée (+4.0)
+    EXPECT_NEAR(u.getParticules()[0].getPosition().x(), 1.5, 1e-9);
+    EXPECT_DOUBLE_EQ(u.getParticules()[0].getVitesse().x(), 4.0);
+}

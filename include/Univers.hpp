@@ -49,8 +49,9 @@ public:
      * @brief Fait évoluer les particules dans le temps avec l'algorithme Störmer-Verlet
      * @param tEnd Temps final de la simulation
      * @param dt Pas de temps
+     * @param use_potentiel_reflexion Active les forces de parois
      */
-    void avancerParticules(double tEnd, double dt);
+    void avancerParticules(double tEnd, double dt, bool use_potentiel_reflexion = false);
 
     /**
      * @brief Getter de la dimension
@@ -78,15 +79,16 @@ public:
 
     /**
      * @brief Calcule les forces appliquées sur chaque particule
+     * @param use_potentiel_reflexion Si vrai, applique également les forces de potentiel de réflexion aux parois
      * @return Un vecteur contenant les forces associées à chaque particule
      */
-    virtual std::vector<Vector> calculerForces() = 0;
+    virtual std::vector<Vector> calculerForces(bool use_potentiel_reflexion=false) = 0;
 
     /**
      * @brief Met à jour les cellules (si applicable)
      * Méthode virtuelle vide par défaut pour les univers sans cellules
      */
-    virtual void mettreAJourCellules() {}
+    virtual void mettreAJourCellules(bool use_conditions_limites=true) {}
 
     /**
      * @brief Modifie la dimension.

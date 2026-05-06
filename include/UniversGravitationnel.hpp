@@ -22,7 +22,7 @@ public:
      * @brief Calcule les forces gravitationnelles entre toutes les paires de particules
      * @return Un vecteur contenant les forces associées à chaque particule
      */
-    std::vector<Vector> calculerForces() override;
+    std::vector<Vector> calculerForces(bool use_potentiel_reflexion=false) override;
 };
 
 #endif

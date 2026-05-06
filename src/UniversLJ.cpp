@@ -105,7 +105,7 @@ size_t UniversLJ::getNbCellules() const {
 }
 
 
-std::vector<Vector> UniversLJ::calculerForces() {
+std::vector<Vector> UniversLJ::calculerForces(bool use_potentiel_reflexion) {
 
     const size_t N = particuleList.size();
     std::vector<Vector> forces(N, Vector(0.0, 0.0, 0.0));
@@ -205,6 +205,13 @@ std::vector<Vector> UniversLJ::calculerForces() {
         particuleList[i].setForce(forces[i]);
     }
 
+    if (use_potentiel_reflexion) {
+        appliquerForcesParoi();
+        for (size_t i = 0; i < N; ++i) {
+            forces[i] = particuleList[i].getForce();
+        }
+    }
+
     return forces;
 }
 
@@ -224,8 +231,11 @@ void UniversLJ::setConditionsLimites(Univers::ConditionLimite cx, Univers::Condi
     conditionZ = cz;
 }
 
-void UniversLJ::mettreAJourCellules() {
-    appliquerConditionsLimites(conditionX, conditionY, conditionZ);
+void UniversLJ::mettreAJourCellules(bool use_conditions_limites) {
+    if (use_conditions_limites) {
+        appliquerConditionsLimites(conditionX, conditionY, conditionZ);
+    }
+
 
     for (Cellule& c : celluleList)
         c.viderParticules();
@@ -244,72 +254,60 @@ void UniversLJ::mettreAJourCellules() {
     }
 }
 
-// void UniversLJ::appliquerConditionsLimites(Univers::ConditionLimite cx, Univers::ConditionLimite cy, Univers::ConditionLimite cz) {
-//     auto appliquerAxe = [&](double &coord, double limit, Univers::ConditionLimite condition, double &velocity) {
-//         bool absorb = false;
+double UniversLJ::calculerForceParoi(double d) {
+    const double s2r2 = sigma*sigma / (4.0*d*d);
+    const double sr6 = s2r2 * s2r2 * s2r2;
+    const double coeff = 24.0 * epsilon / d;
+    return coeff * sr6 * (2.0 * sr6 - 1.0);
+}
 
-//         if (condition == Univers::ConditionLimite::REFLEXION) {
-//             while (coord < 0.0 || coord >= limit) {
-//                 if (coord < 0.0) {
-//                     coord = -coord;
-//                     velocity = -velocity;
-//                 } else {
-//                     coord = 2.0 * limit - coord;
-//                     velocity = -velocity;
-//                 }
-//             }
-//         } else if (condition == Univers::ConditionLimite::PERIODIQUE) {
-//             if (limit > 0.0) {
-//                 coord = std::fmod(coord, limit);
-//                 if (coord < 0.0) coord += limit;
-//             }
-//         } else if (condition == Univers::ConditionLimite::ABSORPTION) {
-//             if (coord < 0.0 || coord >= limit) {
-//                 absorb = true;
-//             }
-//         }
+void UniversLJ::appliquerForcesParoi(){
+    for (Particule& p : particuleList) {
 
-//         return absorb;
-//     };
+        Vector pos = p.getPosition();
+        double fx = 0.0, fy = 0.0, fz = 0.0;
+        double x = pos.x(), y = pos.y(), z = pos.z();
 
-//     std::vector<Particule> survivantes;
-//     survivantes.reserve(particuleList.size());
+        // Paroi x=0
+        if (x < r_cut) {
+            double d = x;
+            fx += calculerForceParoi(d);
+        }
+        // Paroi x=Lx
+        if (x > l_d.x() - r_cut) {
+            double d = l_d.x() - x;
+            fx -= calculerForceParoi(d);
+        }
 
-//     for (Particule& p : particuleList) {
-//         Vector pos = p.getPosition();
-//         Vector vel = p.getVitesse();
-//         bool absorb = false;
+        if (dimension >= 2) {
+            // Paroi y=0
+            if (y < r_cut) {
+                double d = y;
+                fy += calculerForceParoi(d);
+            }
+            // Paroi y=Ly
+            if (y > l_d.y() - r_cut) {
+                double d = l_d.y() - y;
+                fy -= calculerForceParoi(d);
+            }
 
-//         double x = pos.x();
-//         double y = pos.y();
-//         double z = pos.z();
-//         double vx = vel.x();
-//         double vy = vel.y();
-//         double vz = vel.z();
+            if (dimension == 3) {
+                // Paroi z=0
+                if (z < r_cut) {
+                    double d = z;
+                    fz += calculerForceParoi(d);
+                }
+                // Paroi z=Lz
+                if (z > l_d.z() - r_cut) {
+                    double d = l_d.z() - z;
+                    fz -= calculerForceParoi(d);
+                }
+            }
+        }
 
-//         absorb = appliquerAxe(x, l_d.x(), cx, vx);
-
-//         if (dimension >= 2)
-//             absorb = absorb || appliquerAxe(y, l_d.y(), cy, vy);
-
-//         if (dimension == 3)
-//             absorb = absorb || appliquerAxe(z, l_d.z(), cz, vz);
-
-
-//         if (!absorb) {
-//             p.setPosition(Vector(x, y, z));
-//             p.setVitesse(Vector(vx, vy, vz));
-//             survivantes.push_back(p);
-//         }
-//     }
-
-//     if (cx == Univers::ConditionLimite::ABSORPTION ||
-//         cy == Univers::ConditionLimite::ABSORPTION ||
-//         cz == Univers::ConditionLimite::ABSORPTION) {
-//         particuleList = survivantes;
-//         n_particules = particuleList.size();
-//     }
-// }
+        p.setForce(p.getForce() + Vector(fx, fy, fz));
+    }
+}
 
 void UniversLJ::appliquerConditionsLimites(
         Univers::ConditionLimite cx,
@@ -379,5 +377,3 @@ double UniversLJ::energiePotentielle() const {
     }
     return ep;
 }
-
-

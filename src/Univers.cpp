@@ -4,6 +4,7 @@
 #include "ExportVTK.hpp"
 #include "ExportCsv.hpp"
 #include <cmath>
+#include "Exceptions.hpp"
 
 Univers::Univers(int dim, int reserveCount)
     : dimension(dim), n_particules(0), gravity(0.0, 0.0, 0.0) {
@@ -52,6 +53,13 @@ void Univers::setGravity(const Vector& g) {
 }
 
 void Univers::setLimiteEnergie(double cible_Ec, int frequence, int type) {
+    if (frequence <= 0) {
+        throw ConfigurationException("La fréquence du thermostat doit être strictement positive.");
+    }
+    if (cible_Ec < 0.0) {
+        throw PhysicsException("L'énergie cinétique cible ne peut pas être négative.");
+    }
+
     this->limite_energie_active = true;
     this->frequence_limite = frequence;
     if (type == -1) {
@@ -77,6 +85,13 @@ void Univers::finaliseSauvegardeVTK(const std::vector<int>& vtk_steps,
 }
 
 void Univers::avancerParticules(double tEnd, double dt, bool use_potentiel_reflexion, bool use_gravity) {
+    if (dt <= 0.0) {
+        throw ConfigurationException("Le pas de temps (dt) doit être strictement positif.");
+    }
+    if (tEnd <= dt) {
+        throw ConfigurationException("Le temps de fin (tEnd) doit être strictement supérieur au pas de temps (dt).");
+    }
+
     if (particuleList.empty()) return;
 
     long unsigned int N = particuleList.size();
@@ -128,88 +143,6 @@ void Univers::avancerParticules(double tEnd, double dt, bool use_potentiel_refle
             vel += (forces[i] + forces_old[i]) * (0.5*dt * inv_masses[i]);
             p.setVitesse(vel);
         }
-
-        
-        // if (limite_energie_active && step % frequence_limite == 0) {
-        //     if (!cibles_Ec_par_type.empty()) {
-        //         // 1. Initialisation pour éviter les erreurs de constructeur par défaut
-        //         std::map<int, Vector> quantite_mouvement;
-        //         std::map<int, double> masse_totale;
-        //         std::map<int, Vector> v_com;
-        //         std::map<int, double> current_Ec_par_type;
-        //         for (const auto& pair : cibles_Ec_par_type) {
-        //             quantite_mouvement.insert({pair.first, Vector(0.0, 0.0, 0.0)});
-        //             masse_totale.insert({pair.first, 0.0});
-        //             v_com.insert({pair.first, Vector(0.0, 0.0, 0.0)});
-        //             current_Ec_par_type.insert({pair.first, 0.0});
-        //         }
-
-        //         // 2. Calcul du Centre de Masse (vitesse de dérive macroscopique)
-        //         for (const auto& p : particuleList) {
-        //             int type = p.getType();
-        //             if (masse_totale.find(type) != masse_totale.end()) {
-        //                 quantite_mouvement.at(type) += p.getVitesse() * p.getMasse();
-        //                 masse_totale.at(type) += p.getMasse();
-        //             }
-        //         }
-        //         for (const auto& pair : cibles_Ec_par_type) {
-        //             int type = pair.first;
-        //             if (masse_totale.at(type) > 0) {
-        //                 v_com.at(type) = quantite_mouvement.at(type) / masse_totale.at(type);
-        //             }
-        //         }
-                
-        //         // 3. Énergie thermique (vitesse relative au centre de masse)
-        //         for (const auto& p : particuleList) {
-        //             int type = p.getType();
-        //             if (current_Ec_par_type.find(type) != current_Ec_par_type.end()) {
-        //                 Vector v_thermique = p.getVitesse() - v_com.at(type);
-        //                 current_Ec_par_type.at(type) += 0.5 * p.getMasse() * v_thermique.norm2();
-        //             }
-        //         }
-
-        //         // 4. Application du thermostat (uniquement si divergence/dépassement)
-        //         std::map<int, double> betas;
-        //         for (const auto& pair : cibles_Ec_par_type) {
-        //             int type = pair.first;
-        //             double cible = pair.second;
-        //             double current = current_Ec_par_type.at(type);
-        //             betas[type] = (current > cible) ? std::sqrt(cible / current) : 1.0;
-        //         }
-                
-        //         for (auto& p : particuleList) {
-        //             int type = p.getType();
-        //             auto it = betas.find(type);
-        //             if (it != betas.end()) {
-        //                 Vector v_thermique = p.getVitesse() - v_com.at(type);
-        //                 p.setVitesse(v_com.at(type) + v_thermique * it->second);
-        //             }
-        //         }
-        //     } else {
-        //         Vector quantite_mouvement(0.0, 0.0, 0.0);
-        //         double masse_totale = 0.0;
-        //         for (const auto& p : particuleList) {
-        //             quantite_mouvement += p.getVitesse() * p.getMasse();
-        //             masse_totale += p.getMasse();
-        //         }
-        //         Vector v_com = (masse_totale > 0) ? (quantite_mouvement / masse_totale) : Vector(0.0, 0.0, 0.0);
-
-        //         double current_Ec = 0.0;
-        //         for (const auto& p : particuleList) {
-        //             Vector v_thermique = p.getVitesse() - v_com;
-        //             current_Ec += 0.5 * p.getMasse() * v_thermique.norm2();
-        //         }
-
-        //         if (current_Ec > cible_Ec) {
-        //             double beta = std::sqrt(cible_Ec / current_Ec);
-        //             for (auto& p : particuleList) {
-        //                 Vector v_thermique = p.getVitesse() - v_com;
-        //                 p.setVitesse(v_com + v_thermique * beta);
-        //             }
-        //         }
-        //     }
-        // }
-
 
         // Régulation de l'énergie cinétique par type 
         if (limite_energie_active && step % frequence_limite == 0) {

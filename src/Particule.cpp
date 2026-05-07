@@ -3,6 +3,7 @@
 #include <vector>
 #include <cmath>
 #include "Particule.hpp"
+#include "Exceptions.hpp"
 
 // Implementation de la classe Particule en utilisant Vector
 
@@ -20,7 +21,7 @@ Particule::Particule(const Vector& position,
       categorie(categorie)
 {
     if (masse <= 0)
-        throw std::invalid_argument("La masse doit être strictement positive.");
+        throw PhysicsException("La masse doit être strictement positive.");
 }
 
 // Setters et getters

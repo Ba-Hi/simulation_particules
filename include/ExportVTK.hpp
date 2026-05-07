@@ -4,6 +4,7 @@
 #include <vector>
 #include <iomanip>
 #include "Particule.hpp"
+#include "Exceptions.hpp"
 
 /**
  * @brief Sauvegarde les particules dans un fichier VTK XML (.vtp)
@@ -22,7 +23,7 @@ inline void saveVTK(const std::vector<Particule>& particles,
     filename << "output_" << std::setw(4) << std::setfill('0') << step << ".vtp";
 
     std::ofstream file(filename.str());
-    if (!file) throw std::runtime_error("Impossible d'ouvrir " + filename.str());
+    if (!file) throw IOException("Impossible d'ouvrir " + filename.str());
 
     int N = particles.size();
 

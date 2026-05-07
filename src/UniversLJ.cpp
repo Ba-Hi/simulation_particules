@@ -4,6 +4,7 @@
 #include <algorithm>
 #include "ExportCsv.hpp"
 #include "Force.hpp"
+#include "Exceptions.hpp"
 
 
 
@@ -22,7 +23,13 @@ UniversLJ::UniversLJ(const int& dimension, const Vector& l_d, const double& r_cu
             conditionZ(Univers::ConditionLimite::ABSORPTION),
             celluleList(){
     if (dimension > 3 || dimension < 1) {
-        throw std::invalid_argument("La dimension est soit 1D, 2D, ou 3D.");
+        throw ConfigurationException("La dimension doit être 1, 2 ou 3.");
+    }
+    if (r_cut <= 0.0) {
+        throw ConfigurationException("Le rayon de coupure (r_cut) doit être strictement positif.");
+    }
+    if (l_d.x() <= 0.0 || (dimension >= 2 && l_d.y() <= 0.0) || (dimension == 3 && l_d.z() <= 0.0)) {
+        throw ConfigurationException("Les dimensions du domaine (l_d) doivent être strictement positives.");
     }
 }
 
@@ -43,7 +50,13 @@ UniversLJ::UniversLJ(const int& dimension, const Vector& l_d, const double& r_cu
             conditionZ(Univers::ConditionLimite::ABSORPTION),
             celluleList(){
     if (dimension > 3 || dimension < 1) {
-        throw std::invalid_argument("La dimension est soit 1D, 2D, ou 3D.");
+        throw ConfigurationException("La dimension doit être 1, 2 ou 3.");
+    }
+    if (r_cut <= 0.0) {
+        throw ConfigurationException("Le rayon de coupure (r_cut) doit être strictement positif.");
+    }
+    if (l_d.x() <= 0.0 || (dimension >= 2 && l_d.y() <= 0.0) || (dimension == 3 && l_d.z() <= 0.0)) {
+        throw ConfigurationException("Les dimensions du domaine (l_d) doivent être strictement positives.");
     }
 }
 
@@ -96,6 +109,9 @@ void UniversLJ::initialiserCellules() {
 }
 
 int UniversLJ::indice1D(int i, int j, int k){
+    if (i < 0 || i >= nx || j < 0 || j >= ny || k < 0 || k >= nz) {
+        throw MathException("Indice de cellule hors limites de la grille.");
+    }
     return i + nx * (j + ny * k);
 
 }

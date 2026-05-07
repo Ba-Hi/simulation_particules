@@ -46,6 +46,8 @@ cmake ..
 
 # 3. Compiler
 make
+# ou 
+make -j$(nproc) 
 ```
 
 
@@ -62,11 +64,12 @@ ctest
 ```
 
 ### Documentation
-Pour générer la documentation HTML via Doxygen :
+Pour générer la documentation HTML via Doxygen, depuis le répertoire de build:
 
 ```bash
 make doc
 ```
+
 qui génère `docu/html/index.html` contenant la documentation oxygen.
 
 Ou bien depuis la racine du projet :

@@ -8,7 +8,7 @@
 
 int main() {
 
-    const double Lx = 250.0;
+    const double Lx = 300.0;
     const double Ly = 180.0;
 
     const int N1 = 395;

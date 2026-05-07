@@ -1,6 +1,7 @@
 #include <iostream>
 #include "Vector.hpp"
 #include <cmath>
+#include "Exceptions.hpp"
 
 
 Vector::Vector(double x_init, double y_init, double z_init) :
@@ -32,7 +33,7 @@ Vector Vector::operator/(double scalar) const {
         return Vector(x_ / scalar , y_ / scalar , z_ / scalar);
     }
     else {
-        throw std::runtime_error("Division par zéro");
+        throw MathException("Division d'un vecteur par zéro");
     }
 }
 
@@ -59,7 +60,7 @@ Vector operator/(double s, const Vector&p) {
         return Vector(p.x() / s, p.y() / s, p.z() / s);
     }
     else {
-        throw std::runtime_error("Division par zéro");
+        throw MathException("Division d'un vecteur par zéro");
     }
     
 }
@@ -79,7 +80,7 @@ Vector& Vector::operator*=(double scalar){
 }
 
 Vector& Vector::operator/=(double scalar){
-    if (std::abs(scalar) < 1e-30) throw std::runtime_error("Vector: division by zero");
+    if (std::abs(scalar) < 1e-30) throw MathException("Division d'un vecteur par zéro");
     x_ /= scalar; y_ /= scalar; z_ /= scalar;
     return *this;
 }

@@ -13,11 +13,14 @@ Le projet met un accent fort sur l'**optimisation spatiale et algorithmique**, a
   - `UniversGravitationnel` : Loi de la gravitation universelle de Newton.
   - `UniversLJ` : Potentiel de Lennard-Jones avec gestion de distance de coupure ($r_{cut}$).
 - **Optimisations des Performances** :
-  - Découpage spatial via maillage (`Cellule`) et listes de voisinage limitant le calcul aux cellules adjacentes, réduisant la complexité de $O(N^2)$ à $O(N)$.
+  - Découpage spatial via maillage (`Cellule`) et listes de voisinage limitant le calcul aux cellules adjacentes.
   - Exploitation de la 3ème loi de Newton ($\mathbf{F}_{ji} = -\mathbf{F}_{ij}$) limitant de moitié les évaluations de force.
   - Pré-allocation mémoire (`std::vector::reserve`) et gestion sans copie (in-place) lors de l'application des conditions aux limites.
-  - Support de flags d'optimisation agressifs (`-O3`, `-march=native`, `-ffast-math`).
-- **Conditions aux limites paramétrables** : Périodiques, Réflexion, et Absorption.
+  - Support de flags d'optimisation (`-O3`, `-march=native`, `-ffast-math`).
+- **Conditions aux limites paramétrables** : Périodiques, Absorption et Réflexion (via rebond cinématique ou murs "doux" par potentiel).
+- **Régulation de la vitesse** : Implémentation d'une limite d'énergie cinétique par mise à l'échelle des vitesses pour limiter l'énergie cinétique de sous-groupes de particules.
+- **Forces Extérieures** : Ajout d'un champ gravitationnel uniforme (poids).
+- **Gestion des Erreurs** : Hiérarchie complète d'exceptions (`PhysicsException`, `ConfigurationException`, etc.) pour prévenir les configurations invalides.
 - **Export et Visualisation** : Génération de fichiers au format VTK (`.pvd`, `.vtp`) pour une visualisation 3D interactive, ainsi que des exports CSV traditionnels.
 
 ## Structure du Projet
@@ -61,6 +64,35 @@ ctest
 # Ou lancer les binaires directement
 ./test/test_univers
 ./test/test_particule
+```
+
+### Contrôle de la mémoire avec Valgrind
+
+Pour vérifier l'absence de fuites mémoire et les erreurs d'accès, vous pouvez exécuter les binaires de test avec Valgrind. Par exemple :
+
+```bash
+valgrind --leak-check=full --show-leak-kinds=all ./build/test/test_univers
+```
+
+Un script `valgrind_all_tests.sh` est également fourni pour lancer Valgrind sur tous les tests compilés.
+
+### Exemples de démos
+
+Après compilation, plusieurs exécutables de démonstration sont disponibles dans `build/demo/` :
+
+```bash
+./build/demo/demo_systeme_solaire
+./build/demo/demo_collision_2D
+./build/demo/demo_collision_3D
+./build/demo/demo_goutte_collision
+./build/demo/demo_comparaison_murs
+```
+, etc.
+
+Pour visualiser les résultats, ouvrez le fichier `.pvd` généré dans le répertoire de build avec ParaView :
+
+```bash
+paraview simulation.pvd
 ```
 
 ### Documentation
